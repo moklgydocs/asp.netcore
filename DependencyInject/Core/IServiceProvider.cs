@@ -9,8 +9,8 @@ namespace DependencyInject.Core
     /// <summary>
     /// 服务解析的入口，用于运行时获取服务实例
     /// </summary>
-    public interface IServiceProvider
+    public interface IServiceProvider : IServiceScopeFactory
     {
-        object GetServices(Type serviceType);
+        object GetService(Type serviceType);
     }
 }

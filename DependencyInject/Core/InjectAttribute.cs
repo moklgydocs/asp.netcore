@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace DependencyInject.Core
 {
-    /// <summary>
-    /// 服务注册的容器，用于配置阶段
-    /// </summary>
-    public interface IServiceCollection : IList<ServiceDescriptor>
+    // 属性注入特性
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class InjectAttribute : Attribute
     {
-      
     }
 }

@@ -260,3 +260,4 @@ host/EFCore.Case.Blazor.Server.Host/Logs/logs.txt
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
+/.vs/asp.net core/FileContentIndex/0aa0a537-9a01-4f92-99a0-2c5971f479e4.vsidx

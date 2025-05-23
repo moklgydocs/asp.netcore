@@ -17,12 +17,32 @@ namespace DependencyInject.Core
         private readonly DIContainer _rootContainer;
         private bool _disposed;
 
-        // 用于服务实例缓存的键
+        /// <summary>
+        /// 服务缓存键，用于唯一标识服务实例
+        ///<para>ServiceCacheKey 用作依赖注入容器（DIContainer）中服务实例缓存的键。</para>
+        ///<para>它确保在缓存（如 _singletonInstances 和 _scopedInstances）中唯一标识每一个服务实例，尤其是当同一个服务类型有多个实现时。</para>  
+        ///<para>好处</para>  
+        ///<para>1.	避免冲突：同一服务类型有多个实现时，能区分不同实现的缓存实例，防止覆盖或混淆。</para>  
+        ///<para>2.	高效查找：作为字典的键，查找和存储服务实例时性能高效。</para>  
+        ///<para>3.	线程安全：配合 ConcurrentDictionary，支持多线程环境下的安全缓存。</para>  
+        ///<para>4.	简化管理：统一缓存键的生成和比较逻辑，代码更清晰、易维护。</para>  
+        /// </summary>
         private readonly struct ServiceCacheKey : IEquatable<ServiceCacheKey>
         {
+            /// <summary>
+            /// 服务类型
+            /// </summary>
             public readonly Type Type;
+            /// <summary>
+            /// 实现索引，可选
+            /// </summary>
             public readonly int? ImplementationIndex;
 
+            /// <summary>
+            /// 唯一性：通过服务类型和实现索引的组合，唯一标识某个具体的服务实现。
+            /// </summary>
+            /// <param name="type"></param>
+            /// <param name="implementationIndex"></param>
             public ServiceCacheKey(Type type, int? implementationIndex = null)
             {
                 Type = type;
@@ -34,7 +54,10 @@ namespace DependencyInject.Core
 
             public override bool Equals(object obj)
                 => obj is ServiceCacheKey key && Equals(key);
-
+            /// <summary>
+            /// 比较与哈希：实现了 IEquatable&lt;ServiceCacheKey&gt;，重写了 Equals 和 GetHashCode，保证在字典或并发字典中能正确查找和存储。
+            /// </summary> 
+            /// <returns></returns>
             public override int GetHashCode()
                 => HashCode.Combine(Type, ImplementationIndex);
         }
@@ -309,6 +332,6 @@ namespace DependencyInject.Core
             // 清空缓存
             _scopedInstances.Clear();
         }
-         
+
     }
 }

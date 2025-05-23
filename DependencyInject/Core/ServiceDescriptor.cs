@@ -8,62 +8,72 @@ using DependencyInject.Enums;
 namespace DependencyInject.Core
 {
     /// <summary>
-    /// 服务描述 
-    /// <para>描述一个服务注册，包含服务类型、如何创建服务及其生命周期</para>
-    /// <para>ServiceDescriptor是依赖注入系统的核心数据结构，它包含了如何创建和管理服务实例的所有信息：</para>
-    /// <para>三种注册方式 </para>
-    /// <para>   - 类型到类型的映射：最常见的注册方式，服务接口映射到具体实现类</para>
-    /// <para>   - 直接实例：提前创建的实例，总是作为单例</para>
-    /// <para>   - 工厂方法：允许自定义复杂的实例创建逻辑</para>
+    /// 服务描述符（ServiceDescriptor）
+    /// <para>用于描述服务的注册信息，包括服务类型、实现类型、实例、工厂方法及生命周期。</para>
+    /// <para>依赖注入容器通过ServiceDescriptor来管理服务的创建和生命周期。</para>
+    /// <para>支持三种注册方式：</para>
+    /// <para>1. 类型到类型的映射（接口到实现类）</para>
+    /// <para>2. 直接实例（单例）</para>
+    /// <para>3. 工厂方法（自定义实例创建逻辑）</para>
     /// </summary>
     public class ServiceDescriptor
     {
+        /// <summary>
+        /// 服务类型（通常为接口或抽象类）
+        /// </summary>
         public Type ServiceType { get; }
 
+        /// <summary>
+        /// 实现类型（具体的实现类，类型映射注册时使用）
+        /// </summary>
         public Type ImplementationType { get; }
 
+        /// <summary>
+        /// 服务实例（直接实例注册时使用，始终为单例）
+        /// </summary>
         public object Instance { get; internal set; }
 
+        /// <summary>
+        /// 工厂方法（通过委托自定义实例创建逻辑）
+        /// </summary>
         public Func<IServiceProvider, object> Factory { get; }
 
         /// <summary>
-        /// 定义服务的生命周期，影响实例的创建和缓存策略
+        /// 服务生命周期（单例、作用域、瞬时）
         /// </summary>
         public ServiceLifetime ServiceLifetime { get; }
 
-
         /// <summary>
-        /// 基于实现类型的描述符
+        /// 构造函数：基于类型映射的服务描述符
         /// </summary>
-        /// <param name="serviceType"></param>
-        /// <param name="implementationType"></param>
-        /// <param name="serviceLifetime"></param>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="implementationType">实现类型</param>
+        /// <param name="serviceLifetime">生命周期</param>
         private ServiceDescriptor(Type serviceType, Type implementationType, ServiceLifetime serviceLifetime)
         {
             ServiceType = serviceType;
-
             ImplementationType = implementationType;
-
             ServiceLifetime = serviceLifetime;
         }
 
         /// <summary>
-        /// 基于实例的描述符
+        /// 构造函数：基于实例的服务描述符（始终为单例）
         /// </summary>
-        /// <param name="serviceType"></param>
-        /// <param name="instance"></param>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="instance">服务实例</param>
         private ServiceDescriptor(Type serviceType, object instance)
         {
             ServiceType = serviceType;
             Instance = instance;
-            ServiceLifetime = ServiceLifetime.Singleton; // 实例总是单例
+            ServiceLifetime = ServiceLifetime.Singleton; // 实例注册总是单例
         }
+
         /// <summary>
-        /// 基于工厂方法的描述符
+        /// 构造函数：基于工厂方法的服务描述符
         /// </summary>
-        /// <param name="serviceType"></param>
-        /// <param name="factory"></param>
-        /// <param name="serviceLifetime"></param>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="factory">工厂方法</param>
+        /// <param name="serviceLifetime">生命周期</param>
         private ServiceDescriptor(Type serviceType, Func<IServiceProvider, object> factory, ServiceLifetime serviceLifetime)
         {
             ServiceType = serviceType;
@@ -71,15 +81,14 @@ namespace DependencyInject.Core
             ServiceLifetime = serviceLifetime;
         }
 
-
         /// <summary>
-        /// 工厂方法： 创建基于类型的描述符
+        /// 工厂方法：创建基于类型映射的服务描述符
         /// </summary>
-        /// <param name="serviceType"></param>
-        /// <param name="implementationType"></param>
-        /// <param name="serviceLifetime"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="implementationType">实现类型</param>
+        /// <param name="serviceLifetime">生命周期</param>
+        /// <returns>服务描述符实例</returns>
+        /// <exception cref="ArgumentNullException">参数为null时抛出</exception>
         public static ServiceDescriptor Describe(Type serviceType, Type implementationType, ServiceLifetime serviceLifetime)
         {
             if (serviceType == null)
@@ -91,107 +100,157 @@ namespace DependencyInject.Core
                 throw new ArgumentNullException(nameof(implementationType));
             }
             return new ServiceDescriptor(serviceType, implementationType, serviceLifetime);
-
         }
 
-
         /// <summary>
-        /// 创建一个单例服务-实现描述符
+        /// 创建单例服务描述符（类型映射）
         /// </summary>
-        /// <param name="serviceType"></param>
-        /// <param name="implementationType"></param>
-        /// <returns></returns>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="implementationType">实现类型</param>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Singleton(Type serviceType, Type implementationType)
         {
             return Describe(serviceType, implementationType, ServiceLifetime.Singleton);
         }
+
         /// <summary>
-        /// 创建一个单例服务，基于服务类型实例的描述符
+        /// 创建单例服务描述符（直接实例）
         /// </summary>
-        /// <param name="serviceType"></param>
-        /// <param name="instance"></param>
-        /// <returns></returns>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="instance">服务实例</param>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Singleton(Type serviceType, object instance)
         {
             return new ServiceDescriptor(serviceType, instance);
         }
 
         /// <summary>
-        /// 创建一个单例服务，基于实例描述符
+        /// 创建单例服务描述符（泛型，直接实例）
         /// </summary>
-        /// <typeparam name="TService"></typeparam>
-        /// <param name="instance"></param>
-        /// <returns></returns>
+        /// <typeparam name="TService">服务类型</typeparam>
+        /// <param name="instance">服务实例</param>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Singleton<TService>(object instance)
         {
             return Singleton(typeof(TService), instance);
         }
 
         /// <summary>
-        /// 创建一个单例服务，基于实例描述符
+        /// 创建单例服务描述符（泛型，类型映射）
         /// </summary>
-        /// <typeparam name="TService"></typeparam>
-        /// <param name="instance"></param>
-        /// <returns></returns>
+        /// <typeparam name="TService">服务类型</typeparam>
+        /// <typeparam name="TImplementation">实现类型</typeparam>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Singleton<TService, TImplementation>()
         {
             return Singleton(typeof(TService), typeof(TImplementation));
         }
 
         /// <summary>
-        /// 创建一个单例服务，基于工厂方法的描述符
+        /// 创建单例服务描述符（泛型，工厂方法）
         /// </summary>
-        /// <typeparam name="TService"></typeparam>
-        /// <param name="factory"></param>
-        /// <returns></returns>
+        /// <typeparam name="TService">服务类型</typeparam>
+        /// <param name="factory">工厂方法</param>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Singleton<TService>(Func<IServiceProvider, object> factory)
         {
-            return new ServiceDescriptor(typeof(TService), factory, ServiceLifetime.Scoped);
+            // 注意：此处生命周期应为Singleton，若为Scoped请根据实际需求调整
+            return new ServiceDescriptor(typeof(TService), factory, ServiceLifetime.Singleton);
         }
 
-
+        /// <summary>
+        /// 创建作用域服务描述符（类型映射）
+        /// </summary>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="implementationType">实现类型</param>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Scoped(Type serviceType, Type implementationType)
         {
             return Describe(serviceType, implementationType, ServiceLifetime.Scoped);
         }
+
+        /// <summary>
+        /// 创建作用域服务描述符（泛型，类型映射）
+        /// </summary>
+        /// <typeparam name="TService">服务类型</typeparam>
+        /// <typeparam name="TImplementation">实现类型</typeparam>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Scoped<TService, TImplementation>()
             where TImplementation : TService
         {
             return Scoped(typeof(TService), typeof(TImplementation));
         }
+
+        /// <summary>
+        /// 创建作用域服务描述符（泛型，工厂方法）
+        /// </summary>
+        /// <typeparam name="TService">服务类型</typeparam>
+        /// <param name="factory">工厂方法</param>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Scoped<TService>(Func<IServiceProvider, object> factory)
         {
             return new ServiceDescriptor(typeof(TService), factory, ServiceLifetime.Scoped);
         }
+
         /// <summary>
-        /// 创建一个多例服务，基于工厂方法的描述符
+        /// 创建瞬时（多例）服务描述符（类型映射）
         /// </summary>
-        /// <param name="serviceType"></param>
-        /// <param name="implementationType"></param>
-        /// <returns></returns>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="implementationType">实现类型</param>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Transient(Type serviceType, Type implementationType)
         {
             return Describe(serviceType, implementationType, ServiceLifetime.Transient);
         }
 
+        /// <summary>
+        /// 创建瞬时（多例）服务描述符（泛型，类型映射）
+        /// </summary>
+        /// <typeparam name="TService">服务类型</typeparam>
+        /// <typeparam name="TImplementation">实现类型</typeparam>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Transient<TService, TImplementation>()
             where TImplementation : TService
         {
             return Transient(typeof(TService), typeof(TImplementation));
         }
 
+        // 预留：泛型无参瞬时注册
         //public static ServiceDescriptor Transient<TService>()
         //{
         //    return Transient(typeof(TService));
         //}
+
+        /// <summary>
+        /// 创建瞬时（多例）服务描述符（泛型，工厂方法）
+        /// </summary>
+        /// <typeparam name="TService">服务类型</typeparam>
+        /// <param name="factory">工厂方法</param>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Transient<TService>(Func<IServiceProvider, object> factory)
         {
             return new ServiceDescriptor(typeof(TService), factory, ServiceLifetime.Transient);
         }
 
+        /// <summary>
+        /// 创建瞬时（多例）服务描述符（泛型，无实现类型或工厂方法，主要用于标记）
+        /// </summary>
+        /// <typeparam name="TService">服务类型</typeparam>
+        /// <returns>服务描述符实例</returns>
         public static ServiceDescriptor Transient<TService>()
         {
             return new ServiceDescriptor(typeof(TService), ServiceLifetime.Transient);
+        }
+
+        /// <summary>
+        /// 构造函数：仅指定服务类型和生命周期（无实现类型/工厂/实例，主要用于标记或扩展）
+        /// </summary>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="serviceLifetime">生命周期</param>
+        private ServiceDescriptor(Type serviceType, ServiceLifetime serviceLifetime)
+        {
+            ServiceType = serviceType;
+            ServiceLifetime = serviceLifetime;
         }
     }
 }

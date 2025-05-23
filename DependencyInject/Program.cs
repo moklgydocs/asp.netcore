@@ -9,9 +9,18 @@ services.AddSingleton<ILogger, ConsoleLogger>();
 services.AddScoped<IUserRepository, UserRepository>();
 services.AddTransient<IUserService, UserService>();
 
+// 修改以下代码行：  
+// services.AddTransient<UserService>( );  
+// 替换为：  
+services.AddTransient<UserService>(provider =>
+{
+    var userRepository = provider.GetService(typeof(IUserRepository)) as IUserRepository;
+    var logger = provider.GetService(typeof(IUserRepository));
+    return new UserService(userRepository) { Logger = (ILogger)logger };
+});
+
 // 3. 构建容器
 var rootProvider = services.BuildServiceProvider();
-
 // 4. 创建作用域
 using (var scope = rootProvider.CreateScope())
 {

@@ -188,5 +188,10 @@ namespace DependencyInject.Core
         {
             return new ServiceDescriptor(typeof(TService), factory, ServiceLifetime.Transient);
         }
+
+        public static ServiceDescriptor Transient<TService>()
+        {
+            return new ServiceDescriptor(typeof(TService), ServiceLifetime.Transient);
+        }
     }
 }

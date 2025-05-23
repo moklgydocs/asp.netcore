@@ -263,3 +263,5 @@ host/EFCore.Case.Blazor.Server.Host/Logs/logs.txt
 /.vs/
 /obj/*
 /bin/*
+Debug/*
+obj/*

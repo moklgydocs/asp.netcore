@@ -13,6 +13,7 @@ namespace DependencyInject.Core
     /// </summary>
     public static class ServiceCollectionExtensions
     {
+
         /// <summary>
         /// 注册单例服务，服务类型与实现类型分离。
         /// 在应用程序生命周期内只创建一个实现实例。
@@ -125,11 +126,24 @@ namespace DependencyInject.Core
         /// </summary>
         /// <param name="services">服务集合</param>
         /// <returns>IServiceProvider实例</returns>
-        public static IServiceProvider BuildServiceProvider(this IServiceCollection services)
+        [Obsolete]
+        public static IServiceProvider BuildServiceProvider_ByNew(this IServiceCollection services)
         {
             // 通过DIContainer实现IServiceProvider
             return new DIContainer(services);
         }
+
+        /// <summary>
+        /// 构建依赖注入容器，生成IServiceProvider用于解析服务。
+        /// </summary>
+        /// <param name="services">服务集合</param>
+        /// <returns>IServiceProvider实例</returns>
+        public static IServiceProvider BuildServiceProvider(this IServiceCollection services)
+        {
+            // 这种方式会比直接new好很多
+            return ContainerFactory(services);
+        }
+        public static Func<IServiceCollection, IServiceProvider> ContainerFactory { get; set; } = services => new DIContainer(services);
 
     }
 }

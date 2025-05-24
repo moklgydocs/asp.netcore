@@ -25,6 +25,8 @@ namespace DependencyInject.Core
         private readonly DIContainer _rootContainer;
         // 容器是否已释放
         private bool _disposed;
+        private static readonly AsyncLocal<Stack<Type>> _resolutionStack = new();
+
 
         /// <summary>
         /// 服务缓存键，用于唯一标识服务实例（类型+实现索引）
@@ -256,20 +258,35 @@ namespace DependencyInject.Core
         /// <returns>服务实例</returns>
         private object CreateInstance(ServiceDescriptor descriptor)
         {
-            // 已有实例直接返回
-            if (descriptor.Instance != null)
-            {
-                return descriptor.Instance;
-            }
+            var stack = _resolutionStack.Value ??= new Stack<Type>();
+            var type = descriptor.ImplementationType;
 
-            // 有工厂方法则调用工厂
-            if (descriptor.Factory != null)
-            {
-                return descriptor.Factory(this);
-            }
+            if (stack.Contains(type))
+                throw new InvalidOperationException($"检测到循环依赖：{string.Join(" -> ", stack.Reverse())} -> {type}");
 
-            // 通过类型反射创建实例
-            return ActivateInstance(descriptor.ImplementationType);
+            stack.Push(type);
+            try
+            {
+                // 已有实例直接返回
+                if (descriptor.Instance != null)
+                {
+                    return descriptor.Instance;
+                }
+
+                // 有工厂方法则调用工厂
+                if (descriptor.Factory != null)
+                {
+                    return descriptor.Factory(this);
+                }
+
+                // 通过类型反射创建实例
+                return ActivateInstance(descriptor.ImplementationType);
+
+            }
+            finally
+            {
+                stack.Pop();
+            }
         }
 
         /// <summary>
@@ -390,5 +407,16 @@ namespace DependencyInject.Core
             _scopedInstances.Clear();
         }
 
+        public object GetRequiredService(Type serviceType)
+        {
+            // 调用GetService方法，如果返回null则抛出异常
+            var service = GetService(serviceType);
+            if (service != null)
+            {
+                return service;
+            }
+            // 未注册服务，抛出异常
+            throw new InvalidOperationException($"未注册服务类型: {serviceType.FullName}");
+        }
     }
 }

@@ -12,5 +12,7 @@ namespace DependencyInject.Core
     public interface IServiceProvider : IServiceScopeFactory
     {
         object GetService(Type serviceType);
+
+        object GetRequiredService( Type serviceType);
     }
 }

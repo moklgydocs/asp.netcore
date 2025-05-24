@@ -12,9 +12,11 @@ namespace DependencyInject.Core
     /// <para>用于描述服务的注册信息，包括服务类型、实现类型、实例、工厂方法及生命周期。</para>
     /// <para>依赖注入容器通过ServiceDescriptor来管理服务的创建和生命周期。</para>
     /// <para>支持三种注册方式：</para>
-    /// <para>1. 类型到类型的映射（接口到实现类）</para>
-    /// <para>2. 直接实例（单例）</para>
-    /// <para>3. 工厂方法（自定义实例创建逻辑）</para>
+    /// <list type="number">
+    /// <item>类型到类型的映射（接口到实现类）</item>
+    /// <item>直接实例（单例）</item>
+    /// <item>工厂方法（自定义实例创建逻辑）</item>
+    /// </list>
     /// </summary>
     public class ServiceDescriptor
     {
@@ -30,6 +32,12 @@ namespace DependencyInject.Core
 
         /// <summary>
         /// 服务实例（直接实例注册时使用，始终为单例）
+        /// <para>外部代码只能读取 Instance，不能直接赋值；只有在同一程序集内部（如依赖注入容器的实现代码中）可以修改 Instance。</para>
+        /// <list type="number">
+        /// <item>封装性 防止外部调用者随意更改服务实例，保证服务注册后实例的唯一性和一致性。</item>
+        /// <item>容器控制依赖注入容器在解析服务时，可能需要在内部缓存或延迟初始化单例实例，这时可以安全地在容器内部赋值。</item>
+        /// <item>安全性避免外部代码破坏依赖注入容器的生命周期管理和实例缓存逻辑。</item>
+        /// </list>
         /// </summary>
         public object Instance { get; internal set; }
 
@@ -58,6 +66,16 @@ namespace DependencyInject.Core
 
         /// <summary>
         /// 构造函数：基于实例的服务描述符（始终为单例）
+        /// <para> 问： 为何实例注册总是单例的？</para>
+        /// <list type="number">
+        /// 答：
+        /// <item>如果允许将直接实例注册为 Scoped 或 Transient，会导致不一致的行为：
+        /// <item>
+        /// 每次请求都是新的实例，如果实例注册运行scope生命周期，那么每次请求实例都没有变化</item>
+        /// </item>
+        /// <item>Scoped：多个作用域中会共享同一个实例，违背了作用域隔离的原则。</item>
+        /// <item>Transient：每次请求都应该是新实例，但这里的实例是固定的，无法满足要求。</item>
+        /// </list>
         /// </summary>
         /// <param name="serviceType">服务类型</param>
         /// <param name="instance">服务实例</param>
@@ -81,6 +99,16 @@ namespace DependencyInject.Core
             ServiceLifetime = serviceLifetime;
         }
 
+        /// <summary>
+        /// 构造函数：仅指定服务类型和生命周期（无实现类型/工厂/实例，主要用于标记或扩展）
+        /// </summary>
+        /// <param name="serviceType">服务类型</param>
+        /// <param name="serviceLifetime">生命周期</param>
+        private ServiceDescriptor(Type serviceType, ServiceLifetime serviceLifetime)
+        {
+            ServiceType = serviceType;
+            ServiceLifetime = serviceLifetime;
+        }
         /// <summary>
         /// 工厂方法：创建基于类型映射的服务描述符
         /// </summary>
@@ -242,15 +270,5 @@ namespace DependencyInject.Core
             return new ServiceDescriptor(typeof(TService), ServiceLifetime.Transient);
         }
 
-        /// <summary>
-        /// 构造函数：仅指定服务类型和生命周期（无实现类型/工厂/实例，主要用于标记或扩展）
-        /// </summary>
-        /// <param name="serviceType">服务类型</param>
-        /// <param name="serviceLifetime">生命周期</param>
-        private ServiceDescriptor(Type serviceType, ServiceLifetime serviceLifetime)
-        {
-            ServiceType = serviceType;
-            ServiceLifetime = serviceLifetime;
-        }
     }
 }

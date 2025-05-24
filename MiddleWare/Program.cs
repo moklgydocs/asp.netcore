@@ -1,4 +1,4 @@
-namespace MiddleWare
+﻿namespace MiddleWare
 {
     public class Program
     {

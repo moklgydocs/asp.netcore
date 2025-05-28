@@ -7,7 +7,13 @@ using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace Mok.Modularity
 {
-    public class MokModule:IMokModule
+    public class MokModule : IMokModule,
+        IOnPreApplicationInitialization,
+        IOnApplicationInitialization,
+        IOnPostApplicationInitialization,
+        IOnApplicationShutdown,
+        IPreConfigureServices,
+        IPostConfigureServices
     {
         protected internal bool SkipAutoServiceRegistration { get; protected set; }
 

@@ -10,7 +10,7 @@ namespace Mok.Modularity
 {
     public static class HostBuilderExtensions
     {
-        public static async Task<IHostBuilder> AddApplicationAsync<TModule>(this IHostBuilder builder) where TModule : IMokModule
+        public static async Task<IHostBuilder> AddApplicationAsync<TModule>(this IHostBuilder builder) where TModule : MokModule
         {
             // 获取当前模块的类型
             var moduleType = typeof(TModule);
@@ -30,7 +30,7 @@ namespace Mok.Modularity
             return await Task.FromResult(builder);
         }
 
-        public static async Task<IWebHostBuilder> AddApplicationAsync<TModule>(this IWebHostBuilder builder) where TModule : IMokModule
+        public static async Task<IWebHostBuilder> AddApplicationAsync<TModule>(this IWebHostBuilder builder) where TModule : MokModule
         {
             // 获取当前模块的类型
             var moduleType = typeof(TModule);

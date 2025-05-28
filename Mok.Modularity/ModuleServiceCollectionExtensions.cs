@@ -51,7 +51,7 @@ namespace Mok.Modularity
         public static async Task<IApplicationBuilder> AddApplicationAsync<TRootModule>(
            this IApplicationBuilder app,
            ILoggerFactory loggerFactory = null)
-           where TRootModule : IMokModule // 约束根模块类型
+           where TRootModule : MokModule // 约束根模块类型
         {
             var assembliesToScan = new[] { typeof(TRootModule).Assembly };
 
@@ -92,7 +92,7 @@ namespace Mok.Modularity
         public static IServiceCollection AddApplicationAsync<TRootModule>(
             this IServiceCollection services,
             ILoggerFactory loggerFactory = null)
-            where TRootModule : IMokModule // 约束根模块类型
+            where TRootModule : MokModule // 约束根模块类型
         {
             var assembliesToScan = new[] { typeof(TRootModule).Assembly };
 

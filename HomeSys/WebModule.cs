@@ -1,4 +1,5 @@
 ﻿using Mok.Modularity;
+using Microsoft.AspNetCore.Builder;
 
 namespace HomeSys
 {
@@ -7,7 +8,7 @@ namespace HomeSys
         public override void PreConfigureServices(ServiceConfigurationContext context)
         {
             Console.WriteLine("到达与配置服务点");
-            base.PreConfigureServices(context);
+            context.Services.AddRazorPages();
         }
 
         public override void ConfigureServices(ServiceConfigurationContext context)
@@ -26,6 +27,7 @@ namespace HomeSys
             //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             //    app.UseHsts();
             //}
+            app.UseWelcomePage();
             app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
@@ -34,11 +36,12 @@ namespace HomeSys
             app.UseRouting();
 
             app.UseAuthorization();
-            app.UseMvc(); 
-            //app.MapStaticAssets();
-            //app.MapRazorPages()
-            //   .WithStaticAssets();
-
+            app.UseMvc();
+            // 如何让我的框架支持IEndpointRouteBuilder
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            }); 
         }
     }
 }

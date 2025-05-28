@@ -11,7 +11,7 @@ namespace Mok.Modularity
     {
         public IServiceProvider ServiceProvider { get; set; }
 
-        public IApplicationBuilder ApplicationBuilder { get; set; }
+        public IApplicationBuilder ApplicationBuilder { get; set; }  
 
         public IHostingEnvironment Enviroment { get; set; }
 

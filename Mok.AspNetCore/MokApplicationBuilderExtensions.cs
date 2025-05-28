@@ -23,15 +23,7 @@ namespace Mok.AspNetCore
                 loggerFactory = webBuilder.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
             }
             var applicationLifetime = webBuilder.Services.BuildServiceProvider().GetRequiredService<IHostApplicationLifetime>();
-
-            //// 2. 创建 MokModuleLoader 实例
-            //var moduleLoader = new ModuleLoader(webBuilder.Services, loggerFactory);
-
-            //// 3. 执行模块的服务配置阶段 (LoadModulesAsync)
-            //await moduleLoader.LoadModulesAsync(assembliesToScan); 
-            // 4. 将 MokModuleLoader 实例注册到 DI 容器，以便后续初始化阶段使用
-            //webBuilder.Services.AddSingleton(moduleLoader);
-            //webBuilder.Services.AddSingleton(typeof(TRootModule)); // 注册根模块类型 
+             
            await Application.CreateAsync(typeof(TRootModule), webBuilder.Services, loggerFactory, assembliesToScan);
 
 

@@ -7,10 +7,14 @@ namespace Mok.Modularity
     [AttributeUsage(AttributeTargets.Class,  AllowMultiple = true)]
     public class DependsOnAttribute: Attribute
     {
-        public Type[] DependedModuleTypes { get; set; }
+        public Type[] DependedModuleTypes { get; }
         public DependsOnAttribute(params Type[] dependsOn)
         {
             DependedModuleTypes = dependsOn;
+        }
+        public virtual Type[] GetDependedTypes()
+        {
+            return DependedModuleTypes;
         }
     }
 }

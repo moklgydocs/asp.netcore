@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Common;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,35 +45,35 @@ namespace Mok.Modularity
 
 
         // 异步方法的默认 Task.CompletedTask 实现
-        public virtual async Task PreConfigureServicesAsync(ServiceConfigurationContext context)
+        public virtual Task PreConfigureServicesAsync(ServiceConfigurationContext context)
         {
             PreConfigureServices(context);
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
-        public virtual async Task ConfigureServicesAsync(ServiceConfigurationContext context)
+        public virtual Task ConfigureServicesAsync(ServiceConfigurationContext context)
         {
             ConfigureServices(context);
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         } // 实际模块通常会重写此方法
-        public virtual async Task PostConfigureServicesAsync(ServiceConfigurationContext context)
+        public virtual Task PostConfigureServicesAsync(ServiceConfigurationContext context)
         {
             PostConfigureServices(context);
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
-        public virtual async Task OnPreApplicationInitializationAsync(ApplicationInitializationContext context)
+        public virtual Task OnPreApplicationInitializationAsync(ApplicationInitializationContext context)
         {
             OnPreApplicationInitialization(context);
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
-        public virtual async Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
+        public virtual Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
         {
             OnApplicationInitialization(context);
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
-        public virtual async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context)
+        public virtual Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context)
         {
             OnPostApplicationInitialization(context);
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
         public virtual Task OnApplicationShutdownAsync(ApplicationShutdownContext context)
         {
@@ -80,6 +81,18 @@ namespace Mok.Modularity
             return Task.CompletedTask;
         }
 
+        public static void IsMokModule(Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+            if (typeInfo.IsClass && !typeInfo.IsAbstract && !typeInfo.IsGenericType && typeof(MokModule).GetTypeInfo().IsAssignableFrom(type))
+            {
+                return;
+            }
+            else
+            {
+                throw new ArgumentException($"Type '{type.FullName}' is not a valid MokModule. It must be a non-abstract class that inherits from MokModule.");
+            }
+        }
 
         protected void Configure<TOptions>(Action<TOptions> configureOptions)
         where TOptions : class

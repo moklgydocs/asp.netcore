@@ -164,7 +164,7 @@ namespace DependencyInject.Core
         }
 
         /// <summary>
-        /// 判断类型是否为集合类型（IEnumerable&lt;T&gt;/ICollection&lt;T&gt;/IList&lt;T&gt;）
+        /// 判断类型是否为集合类型（IEnumerable&lt;T&gt;ICollection&lt;T&gt;IList&lt;T&gt;）
         /// </summary>
         /// <param name="serviceType">服务类型</param>
         /// <param name="elementType">集合元素类型</param>

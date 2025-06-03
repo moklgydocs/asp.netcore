@@ -1,8 +1,11 @@
-﻿using MiddleWare.IPFilterMiddleware;
+﻿using Mapster;
+using MiddleWare.HealthCheck;
+using MiddleWare.IPFilterMiddleware;
 using MiddleWare.LoggerMiddleWare;
 using MiddleWare.RequestTimingMiddleware;
 using MiddleWare.ResponseCompresison;
 using MiddleWare.SecurityHeadersMiddleware;
+using System.Xml.Linq;
 
 namespace MiddleWare
 {
@@ -45,6 +48,21 @@ namespace MiddleWare
             {
                 option.CompressionLevel = System.IO.Compression.CompressionLevel.Fastest;
                 option.MimeTypes.Add("application/vnd.ms-excel");
+            });
+            app.UseHealthCheck(options =>
+            {
+                options.HealthEndpointPath = "/api/health";
+                options.HealthChecks.Add(async _ =>
+                {
+                    return new HealthCheck.HealthCheckResult
+                    {
+                        HealthStatus = (await HealthCheckMiddleExtensions.CheckRedisConnectionAsync()).HealthStatus,
+                        Description = (await HealthCheckMiddleExtensions.CheckRedisConnectionAsync()).Description,
+                        Duration = TimeSpan.Zero,
+                        Name = "Redis"
+                    };
+                });
+
             });
             var summaries = new[]
             {

@@ -13,8 +13,7 @@ namespace MiddleWare
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddAuthorization();
-            context.Services.AddEndpointsApiExplorer(); 
+            context.Services.AddAuthorization(); 
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)

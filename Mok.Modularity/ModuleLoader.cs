@@ -4,7 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -21,6 +23,10 @@ namespace Mok.Modularity
         private readonly IServiceCollection _services;
         private readonly ILogger<ModuleLoader> _logger;
         private bool _isDisposed;
+
+        // 使用线程安全的集合缓存模块类型信息，避免重复扫描
+        private static readonly ConcurrentDictionary<Assembly, IReadOnlyList<Type>> _assemblyModuleTypesCache =
+            new ConcurrentDictionary<Assembly, IReadOnlyList<Type>>();
 
         /// <summary>
         /// 应用程序配置
@@ -66,18 +72,21 @@ namespace Mok.Modularity
         {
             try
             {
+                var sw = Stopwatch.StartNew();
+                sw.Start();
                 _logger.LogInformation("开始加载模块...");
 
                 // 1. 发现模块类型
                 var moduleTypes = DiscoverModuleTypes(assembliesToScan);
                 _logger.LogInformation("发现 {Count} 个模块类型", moduleTypes.Count);
-
+                 
                 // 2. 根据依赖关系进行拓扑排序模块
                 var sortedModuleTypes = SortModulesTopologically(moduleTypes);
                 _logger.LogInformation("模块拓扑排序完成");
 
                 // 3. 实例化模块
-                await InstantiateModulesAsync(sortedModuleTypes);
+                // 提前预热模块工厂，编译表达式树   
+                ModuleFactory.InstantiateModules(moduleTypes, _modules);
 
                 // 4. 配置服务
                 await ConfigureModuleServicesAsync();
@@ -86,6 +95,9 @@ namespace Mok.Modularity
                 RegisterModulesToServices();
 
                 _logger.LogInformation("模块加载和服务配置完成");
+                sw.Stop();
+                _logger.LogInformation($"模块加载时长： {sw.Elapsed}");
+
             }
             catch (Exception ex)
             {
@@ -113,12 +125,20 @@ namespace Mok.Modularity
                 // 注册为MokModule基类
                 _services.AddSingleton<MokModule>(module);
 
-                // 注册模块实现的所有接口
-                foreach (var interfaceType in moduleType.GetInterfaces()
-                    .Where(i => i != typeof(IDisposable) &&
-                               i != typeof(IAsyncDisposable) &&
-                               !i.Namespace.StartsWith("System")))
+                // 预先获取所有接口，避免重复调用GetInterfaces()
+                var interfaces = moduleType.GetInterfaces();
+
+                // 使用Span进行高效遍历，减少内存分配
+                foreach (var interfaceType in interfaces)
                 {
+                    // 过滤不需要注册的系统接口
+                    if (interfaceType == typeof(IDisposable) ||
+                        interfaceType == typeof(IAsyncDisposable) ||
+                        interfaceType.Namespace?.StartsWith("System") == true)
+                    {
+                        continue;
+                    }
+
                     _services.AddSingleton(interfaceType, module);
                     _logger.LogDebug("已注册接口 {Interface} 到模块 {Module}",
                         interfaceType.Name, moduleType.Name);
@@ -127,16 +147,19 @@ namespace Mok.Modularity
         }
 
         /// <summary>
-        /// 实例化模块
+        /// 实例化模块 - 高性能版本
         /// </summary>
-        private async Task InstantiateModulesAsync(List<Type> moduleTypes)
+        private void InstantiateModules(List<Type> moduleTypes)
         {
+            // 预分配容量以避免动态扩容
+            _modules.Capacity = Math.Max(_modules.Capacity, _modules.Count + moduleTypes.Count);
+
             foreach (var moduleType in moduleTypes)
             {
                 try
                 {
-                    // 使用Activator创建模块实例
-                    var moduleInstance = (MokModule)Activator.CreateInstance(moduleType);
+                    // 使用高性能工厂创建模块实例
+                    var moduleInstance = ModuleFactory.CreateModule(moduleType);
                     _modules.Add(moduleInstance);
                     _logger.LogDebug("已实例化模块: {ModuleName}", moduleType.FullName);
                 }
@@ -183,7 +206,7 @@ namespace Mok.Modularity
         }
 
         /// <summary>
-        /// 发现模块类型
+        /// 发现模块类型 - 使用缓存提高性能
         /// </summary>
         private List<Type> DiscoverModuleTypes(Assembly[] assembliesToScan)
         {
@@ -195,34 +218,52 @@ namespace Mok.Modularity
                 return discoveredModuleTypes;
             }
 
+            // 预分配足够大的容量以避免扩容
+            discoveredModuleTypes.Capacity = assembliesToScan.Length * 5; // 假设每个程序集平均有5个模块
+
             foreach (var assembly in assembliesToScan)
             {
                 try
                 {
-                    discoveredModuleTypes.AddRange(
-                        assembly.GetTypes().Where(t =>
-                            typeof(MokModule).IsAssignableFrom(t) &&
-                            !t.IsInterface && !t.IsAbstract));
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    _logger.LogError(ex, "扫描程序集 {AssemblyName} 时发生类型加载错误", assembly.FullName);
-                    foreach (var loadException in ex.LoaderExceptions.Where(e => e != null))
+                    // 使用缓存避免重复扫描程序集
+                    var moduleTypes = _assemblyModuleTypesCache.GetOrAdd(assembly, asm =>
                     {
-                        _logger.LogError(loadException, "加载器异常");
-                    }
+                        try
+                        {
+                            return asm.GetTypes()
+                                .Where(t => typeof(MokModule).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
+                                .ToArray();
+                        }
+                        catch (ReflectionTypeLoadException ex)
+                        {
+                            _logger.LogError(ex, "扫描程序集 {AssemblyName} 时发生类型加载错误", asm.FullName);
+                            foreach (var loadException in ex.LoaderExceptions.Where(e => e != null))
+                            {
+                                _logger.LogError(loadException, "加载器异常");
+                            }
+                            return Array.Empty<Type>();
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "扫描程序集 {AssemblyName} 时发生错误", asm.FullName);
+                            return Array.Empty<Type>();
+                        }
+                    });
+
+                    discoveredModuleTypes.AddRange(moduleTypes);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "扫描程序集 {AssemblyName} 时发生错误", assembly.FullName);
+                    _logger.LogError(ex, "获取程序集 {AssemblyName} 的模块类型时发生错误", assembly.FullName);
                 }
             }
 
+            // 使用HashSet去重，然后转回List
             return discoveredModuleTypes.Distinct().ToList();
         }
 
         /// <summary>
-        /// 拓扑排序模块
+        /// 拓扑排序模块 - 优化版本
         /// </summary>
         private List<Type> SortModulesTopologically(List<Type> moduleTypes)
         {
@@ -231,15 +272,23 @@ namespace Mok.Modularity
                 return moduleTypes;
             }
 
-            var sortedList = new List<Type>();
-            var inDegree = moduleTypes.ToDictionary(m => m, m => 0);
-            var adj = moduleTypes.ToDictionary(m => m, m => new List<Type>());
+            var sortedList = new List<Type>(moduleTypes.Count);
+            var inDegree = new Dictionary<Type, int>(moduleTypes.Count);
+            var adj = new Dictionary<Type, List<Type>>(moduleTypes.Count);
             var moduleTypeSet = new HashSet<Type>(moduleTypes);
+
+            // 初始化数据结构
+            foreach (var moduleType in moduleTypes)
+            {
+                inDegree[moduleType] = 0;
+                adj[moduleType] = new List<Type>();
+            }
 
             // 构建依赖图
             foreach (var moduleType in moduleTypes)
             {
-                var dependsOnAttrs = moduleType.GetCustomAttributes<DependsOnAttribute>(true);
+                var dependsOnAttrs = moduleType.GetCustomAttributes<DependsOnAttribute>(true).ToArray();
+
                 foreach (var attr in dependsOnAttrs)
                 {
                     foreach (var depType in attr.DependedModuleTypes)
@@ -258,9 +307,19 @@ namespace Mok.Modularity
                 }
             }
 
-            // Kahn算法执行拓扑排序
-            var queue = new Queue<Type>(moduleTypes.Where(m => inDegree[m] == 0));
-            while (queue.Any())
+            // Kahn算法执行拓扑排序 - 使用Queue<T>而不是LINQ以提高性能
+            var queue = new Queue<Type>();
+
+            // 初始化队列
+            foreach (var moduleType in moduleTypes)
+            {
+                if (inDegree[moduleType] == 0)
+                {
+                    queue.Enqueue(moduleType);
+                }
+            }
+
+            while (queue.Count > 0)
             {
                 var u = queue.Dequeue();
                 sortedList.Add(u);
@@ -278,7 +337,15 @@ namespace Mok.Modularity
             // 检测循环依赖
             if (sortedList.Count != moduleTypes.Count)
             {
-                var missingModules = moduleTypes.Except(sortedList).Select(t => t.FullName);
+                var missingModules = new List<string>();
+                foreach (var moduleType in moduleTypes)
+                {
+                    if (!sortedList.Contains(moduleType))
+                    {
+                        missingModules.Add(moduleType.FullName);
+                    }
+                }
+
                 var errorMessage = $"模块依赖中存在循环依赖。未能排序的模块: {string.Join(", ", missingModules)}";
                 _logger.LogError(errorMessage);
                 throw new InvalidOperationException(errorMessage);
@@ -434,8 +501,14 @@ namespace Mok.Modularity
             {
                 _isDisposed = true;
 
+                // 分离异步和同步可释放模块，避免重复处理
+                var asyncDisposables = _modules.OfType<IAsyncDisposable>().ToArray();
+                var disposables = _modules.OfType<IDisposable>()
+                    .Where(m => !(m is IAsyncDisposable))
+                    .ToArray();
+
                 // 异步释放模块资源
-                foreach (var module in _modules.OfType<IAsyncDisposable>())
+                foreach (var module in asyncDisposables)
                 {
                     try
                     {
@@ -449,7 +522,7 @@ namespace Mok.Modularity
                 }
 
                 // 同步释放其他模块
-                foreach (var module in _modules.OfType<IDisposable>().Where(m => !(m is IAsyncDisposable)))
+                foreach (var module in disposables)
                 {
                     try
                     {

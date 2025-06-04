@@ -98,8 +98,8 @@ namespace Mok.Modularity
                 await application.ModuleLoader.LoadModulesAsync(assembliesToScan);
 
                 // 注册模块加载器和根模块类型
-                services.AddSingleton(application.ModuleLoader);
-                services.AddSingleton(rootModuleType);
+                //services.AddSingleton(application.ModuleLoader);
+                //services.AddSingleton(rootModuleType);
 
                 // 构建服务提供程序
                 application.ServiceProvider = services.BuildServiceProvider(validateScopes: false);

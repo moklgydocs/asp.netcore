@@ -13,16 +13,9 @@ namespace HomeSys
             // Add services to the container.
 
             var app = builder.Build();
-            //app.MapGet("/",async (context) =>
-            //{
-            //   await context.Response.WriteAsync("hello world");
-            //});
-            app.MapGet("/api/home/index", async (context) =>
-            {
-                await context.Response.WriteAsync("<h1>Hello world</h1>");
-            });
+            await app.InitializeApplicationAsync();
             await app.RunAsync();
-           
+
         }
     }
 }

@@ -13,6 +13,8 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\DependencyInject\DependencyInject.csproj" />
+	  <ProjectReference Include="..\Mok.AspNetCore\Mok.AspNetCore.csproj" />
+	  <ProjectReference Include="..\Mok.Modularity\Mok.Modularity.csproj" />
 	</ItemGroup>
 
 

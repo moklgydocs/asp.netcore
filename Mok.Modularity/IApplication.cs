@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 
 namespace Mok.Modularity
 {
@@ -10,7 +11,7 @@ namespace Mok.Modularity
         Type RootModuleType { get; }
         IServiceProvider ServiceProvider { get; }
 
-        Task InitializeApplicationAsync();
+        Task InitializeApplicationAsync(IApplicationBuilder app = null);
         Task ShutdownAsync();
     }
 }

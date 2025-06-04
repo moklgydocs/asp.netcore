@@ -7,87 +7,191 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace Mok.Modularity
 {
-    public class ModuleLoader : IDisposable
+    /// <summary>
+    /// 模块加载器 - 负责模块的发现、排序、初始化和关闭
+    /// </summary>
+    public class ModuleLoader : IDisposable, IAsyncDisposable
     {
+        private readonly List<MokModule> _modules = new List<MokModule>();
+        private readonly IServiceCollection _services;
+        private readonly ILogger<ModuleLoader> _logger;
+        private bool _isDisposed;
 
-        private readonly List<MokModule> Modules = new List<MokModule>();
-
-        private readonly IServiceCollection Services;
-
-        private readonly ILogger<ModuleLoader> Logger; 
-
+        /// <summary>
+        /// 应用程序配置
+        /// </summary>
         public IConfiguration Configuration { get; set; }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="services">服务集合</param>
+        /// <param name="loggerFactory">日志工厂</param>
         public ModuleLoader(
-            IServiceCollection services, 
-            ILoggerFactory loggerFactory = null)
-        { 
-            Services = services ?? throw new ArgumentNullException(nameof(services));// 服务集合不能为空
-            Logger = loggerFactory?.CreateLogger<ModuleLoader>() ?? throw new ArgumentNullException(nameof(loggerFactory));// 日志工厂不能为空
-        }
-
-        public async Task LoadModulesAsync(Assembly[] assembliesToScan)
+            IServiceCollection services,
+            ILoggerFactory loggerFactory)
         {
-            // 1. 开始加载模块
-            Logger.LogInformation("starting load modules...");
+            _services = services ?? throw new ArgumentNullException(nameof(services));
 
-            // 1. 发现模块类型
-            var moduleTypes = DiscoverModuleTypes(assembliesToScan);
-            Logger?.LogInformation("发现 {Count} 个模块类型。", moduleTypes.Count);
-            // 2. 根据依赖关系进行拓扑排序模块
-            var sortedModuleTypes = SortModulesTopologically(moduleTypes);
-            Logger.LogInformation("拓扑排序完成。");
-
-            // 3. 实例化模块
-            foreach (var moduleType in sortedModuleTypes)
+            // 注意这里的日志工厂可以为空，应该提供默认的日志记录机制
+            if (loggerFactory == null)
+            {
+                // 使用NullLogger作为默认值，而不是抛出异常
+                _logger = Microsoft.Extensions.Logging.Abstractions.NullLogger<ModuleLoader>.Instance;
+            }
+            else
             {
                 try
                 {
-                    // 假设模块有无参构造函数，或者可以通过某种方式从一个临时的、非常基础的 DI 容器解析（如果模块构造自身需要依赖）
-                    // 为简单起见，这里使用 Activator.CreateInstance
+                    _logger = loggerFactory.CreateLogger<ModuleLoader>();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // LoggerFactory已被释放，使用NullLogger
+                    _logger = Microsoft.Extensions.Logging.Abstractions.NullLogger<ModuleLoader>.Instance;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 加载模块并配置服务
+        /// </summary>
+        /// <param name="assembliesToScan">要扫描的程序集</param>
+        public async Task LoadModulesAsync(Assembly[] assembliesToScan)
+        {
+            try
+            {
+                _logger.LogInformation("开始加载模块...");
+
+                // 1. 发现模块类型
+                var moduleTypes = DiscoverModuleTypes(assembliesToScan);
+                _logger.LogInformation("发现 {Count} 个模块类型", moduleTypes.Count);
+
+                // 2. 根据依赖关系进行拓扑排序模块
+                var sortedModuleTypes = SortModulesTopologically(moduleTypes);
+                _logger.LogInformation("模块拓扑排序完成");
+
+                // 3. 实例化模块
+                await InstantiateModulesAsync(sortedModuleTypes);
+
+                // 4. 配置服务
+                await ConfigureModuleServicesAsync();
+
+                // 5. 注册模块到服务容器
+                RegisterModulesToServices();
+
+                _logger.LogInformation("模块加载和服务配置完成");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "加载模块过程中发生错误");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 注册所有模块到服务容器
+        /// </summary>
+        private void RegisterModulesToServices()
+        {
+            // 注册模块加载器本身
+            _services.AddSingleton<ModuleLoader>(this);
+
+            // 注册所有模块实例
+            foreach (var module in _modules)
+            {
+                var moduleType = module.GetType();
+
+                // 注册具体模块类型
+                _services.AddSingleton(moduleType, module);
+
+                // 注册为MokModule基类
+                _services.AddSingleton<MokModule>(module);
+
+                // 注册模块实现的所有接口
+                foreach (var interfaceType in moduleType.GetInterfaces()
+                    .Where(i => i != typeof(IDisposable) &&
+                               i != typeof(IAsyncDisposable) &&
+                               !i.Namespace.StartsWith("System")))
+                {
+                    _services.AddSingleton(interfaceType, module);
+                    _logger.LogDebug("已注册接口 {Interface} 到模块 {Module}",
+                        interfaceType.Name, moduleType.Name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 实例化模块
+        /// </summary>
+        private async Task InstantiateModulesAsync(List<Type> moduleTypes)
+        {
+            foreach (var moduleType in moduleTypes)
+            {
+                try
+                {
+                    // 使用Activator创建模块实例
                     var moduleInstance = (MokModule)Activator.CreateInstance(moduleType);
-                    Modules.Add(moduleInstance);
-                    Logger?.LogDebug("已实例化模块: {ModuleName}", moduleType.FullName);
+                    _modules.Add(moduleInstance);
+                    _logger.LogDebug("已实例化模块: {ModuleName}", moduleType.FullName);
                 }
                 catch (Exception ex)
                 {
-                    Logger?.LogError(ex, "实例化模块 {ModuleName} 失败。", moduleType.FullName);
-                    throw; // 或者进行更优雅的错误处理
+                    _logger.LogError(ex, "实例化模块 {ModuleName} 失败", moduleType.FullName);
+                    throw;
                 }
             }
+        }
 
-            // 4. 配置服务
-            var serviceContext = new ServiceConfigurationContext(Services /*,Configuration*/);
-            Logger?.LogInformation("开始配置模块服务...");
+        /// <summary>
+        /// 配置模块服务
+        /// </summary>
+        private async Task ConfigureModuleServicesAsync()
+        {
+            var serviceContext = new ServiceConfigurationContext(_services);
+            _logger.LogInformation("开始配置模块服务...");
 
-            foreach (var module in Modules)
+            // 1. PreConfigureServices阶段
+            foreach (var module in _modules)
             {
-                Logger?.LogDebug("执行 PreConfigureServicesAsync: {ModuleName}", module.GetType().FullName);
+                _logger.LogDebug("执行 PreConfigureServicesAsync: {ModuleName}", module.GetType().FullName);
+                module.ServiceConfigurationContext = serviceContext; // 设置上下文
                 await module.PreConfigureServicesAsync(serviceContext);
             }
-            foreach (var module in Modules)
+
+            // 2. ConfigureServices阶段
+            foreach (var module in _modules)
             {
-                Logger?.LogDebug("执行 ConfigureServicesAsync: {ModuleName}", module.GetType().FullName);
-                await module.ConfigureServicesAsync(serviceContext); // 模块在此注册其服务
+                _logger.LogDebug("执行 ConfigureServicesAsync: {ModuleName}", module.GetType().FullName);
+                await module.ConfigureServicesAsync(serviceContext);
             }
-            foreach (var module in Modules)
+
+            // 3. PostConfigureServices阶段
+            foreach (var module in _modules)
             {
-                Logger?.LogDebug("执行 PostConfigureServicesAsync: {ModuleName}", module.GetType().FullName);
+                _logger.LogDebug("执行 PostConfigureServicesAsync: {ModuleName}", module.GetType().FullName);
                 await module.PostConfigureServicesAsync(serviceContext);
+                module.ServiceConfigurationContext = null; // 清理上下文
             }
-            Logger?.LogInformation("模块服务配置完成。");
+
+            _logger.LogInformation("模块服务配置完成");
         }
+
+        /// <summary>
+        /// 发现模块类型
+        /// </summary>
         private List<Type> DiscoverModuleTypes(Assembly[] assembliesToScan)
         {
             var discoveredModuleTypes = new List<Type>();
+
             if (assembliesToScan == null || assembliesToScan.Length == 0)
             {
-                Logger?.LogWarning("未提供用于扫描的程序集");
+                _logger.LogWarning("未提供用于扫描的程序集");
                 return discoveredModuleTypes;
             }
 
@@ -97,35 +201,42 @@ namespace Mok.Modularity
                 {
                     discoveredModuleTypes.AddRange(
                         assembly.GetTypes().Where(t =>
-                        typeof(MokModule).IsAssignableFrom(t)
-                        && !t.IsInterface && !t.IsAbstract));
+                            typeof(MokModule).IsAssignableFrom(t) &&
+                            !t.IsInterface && !t.IsAbstract));
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
-                    Logger.LogError(ex, "扫描程序集{AssemblyName} 时发生类型加载错误", assembly.FullName);
-                    foreach (var loadException in ex.LoaderExceptions)
+                    _logger.LogError(ex, "扫描程序集 {AssemblyName} 时发生类型加载错误", assembly.FullName);
+                    foreach (var loadException in ex.LoaderExceptions.Where(e => e != null))
                     {
-                        Logger?.LogError(loadException, "具体的加载器异常");
+                        _logger.LogError(loadException, "加载器异常");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Logger?.LogError(ex, "扫描程序集 {AssemblyName} 时发生未知错误。", assembly.FullName);
+                    _logger.LogError(ex, "扫描程序集 {AssemblyName} 时发生错误", assembly.FullName);
                 }
             }
+
             return discoveredModuleTypes.Distinct().ToList();
         }
 
+        /// <summary>
+        /// 拓扑排序模块
+        /// </summary>
         private List<Type> SortModulesTopologically(List<Type> moduleTypes)
         {
-            // 这是一个拓扑排序的简化实现 (Kahn's algorithm 概念)
-            // 生产环境中建议使用更健壮的实现或库
+            if (moduleTypes.Count <= 1)
+            {
+                return moduleTypes;
+            }
+
             var sortedList = new List<Type>();
             var inDegree = moduleTypes.ToDictionary(m => m, m => 0);
-            var adj = moduleTypes.ToDictionary(m => m, m => new List<Type>()); // 邻接表，adj[U] 存储所有 U -> V 中的 V
+            var adj = moduleTypes.ToDictionary(m => m, m => new List<Type>());
+            var moduleTypeSet = new HashSet<Type>(moduleTypes);
 
-            var moduleTypeSet = new HashSet<Type>(moduleTypes); // 用于快速查找
-
+            // 构建依赖图
             foreach (var moduleType in moduleTypes)
             {
                 var dependsOnAttrs = moduleType.GetCustomAttributes<DependsOnAttribute>(true);
@@ -133,29 +244,28 @@ namespace Mok.Modularity
                 {
                     foreach (var depType in attr.DependedModuleTypes)
                     {
-                        if (moduleTypeSet.Contains(depType)) // 确保依赖项是已发现的模块之一
+                        if (moduleTypeSet.Contains(depType))
                         {
-                            // 如果 moduleType 依赖于 depType，则存在一条从 depType 到 moduleType 的边
-                            // 即 depType 必须在 moduleType 之前处理
                             adj[depType].Add(moduleType);
                             inDegree[moduleType]++;
                         }
                         else
                         {
-                            Logger?.LogWarning("模块 {Module} 依赖于未找到的模块 {Dependency}。此依赖将被忽略。", moduleType.FullName, depType.FullName);
+                            _logger.LogWarning("模块 {Module} 依赖于未找到的模块 {Dependency}",
+                                moduleType.FullName, depType.FullName);
                         }
                     }
                 }
             }
 
+            // Kahn算法执行拓扑排序
             var queue = new Queue<Type>(moduleTypes.Where(m => inDegree[m] == 0));
-
             while (queue.Any())
             {
                 var u = queue.Dequeue();
                 sortedList.Add(u);
 
-                foreach (var v in adj[u]) // 对于 u 的所有后续节点 v
+                foreach (var v in adj[u])
                 {
                     inDegree[v]--;
                     if (inDegree[v] == 0)
@@ -165,74 +275,195 @@ namespace Mok.Modularity
                 }
             }
 
+            // 检测循环依赖
             if (sortedList.Count != moduleTypes.Count)
             {
-                // 找出图中剩余的节点（即入度不为0的节点），它们构成了循环
                 var missingModules = moduleTypes.Except(sortedList).Select(t => t.FullName);
-                var errorMessage = $"模块依赖中存在循环或缺失依赖。未能排序的模块: {string.Join(", ", missingModules)}";
-                Logger?.LogError(errorMessage);
+                var errorMessage = $"模块依赖中存在循环依赖。未能排序的模块: {string.Join(", ", missingModules)}";
+                _logger.LogError(errorMessage);
                 throw new InvalidOperationException(errorMessage);
             }
 
             return sortedList;
         }
 
-        public async Task InitializeModulesAsync(IServiceProvider serviceProvider, IApplicationBuilder appBuilder, IHostingEnvironment env)
+        /// <summary>
+        /// 初始化模块
+        /// </summary>
+        public async Task InitializeModulesAsync(
+            IServiceProvider serviceProvider,
+            IApplicationBuilder appBuilder,
+            IHostingEnvironment env)
         {
-            Logger?.LogInformation("开始初始化模块...");
-            var appContext = new ApplicationInitializationContext(serviceProvider, appBuilder, env);
+            ThrowIfDisposed();
 
-            foreach (var module in Modules)
+            if (serviceProvider == null)
+                throw new ArgumentNullException(nameof(serviceProvider));
+
+            try
             {
-                Logger?.LogDebug("执行 OnPreApplicationInitializationAsync: {ModuleName}", module.GetType().FullName);
-                await module.OnPreApplicationInitializationAsync(appContext);
+                _logger.LogInformation("开始初始化模块...");
+                var appContext = new ApplicationInitializationContext(serviceProvider, appBuilder, env);
+
+                // 1. 预初始化阶段
+                foreach (var module in _modules)
+                {
+                    _logger.LogDebug("执行 OnPreApplicationInitializationAsync: {ModuleName}",
+                        module.GetType().FullName);
+                    await module.OnPreApplicationInitializationAsync(appContext);
+                }
+
+                // 2. 主初始化阶段
+                foreach (var module in _modules)
+                {
+                    _logger.LogDebug("执行 OnApplicationInitializationAsync: {ModuleName}",
+                        module.GetType().FullName);
+                    await module.OnApplicationInitializationAsync(appContext);
+                }
+
+                // 3. 后初始化阶段
+                foreach (var module in _modules)
+                {
+                    _logger.LogDebug("执行 OnPostApplicationInitializationAsync: {ModuleName}",
+                        module.GetType().FullName);
+                    await module.OnPostApplicationInitializationAsync(appContext);
+                }
+
+                _logger.LogInformation("模块初始化完成");
             }
-            foreach (var module in Modules)
+            catch (Exception ex)
             {
-                Logger?.LogDebug("执行 OnApplicationInitializationAsync: {ModuleName}", module.GetType().FullName);
-                await module.OnApplicationInitializationAsync(appContext);
+                _logger.LogError(ex, "模块初始化过程中发生错误");
+                throw;
             }
-            foreach (var module in Modules)
-            {
-                Logger?.LogDebug("执行 OnPostApplicationInitializationAsync: {ModuleName}", module.GetType().FullName);
-                await module.OnPostApplicationInitializationAsync(appContext);
-            }
-            Logger?.LogInformation("模块初始化完成。");
         }
 
+        /// <summary>
+        /// 关闭模块
+        /// </summary>
         public async Task ShutdownModulesAsync(IServiceProvider serviceProvider)
         {
-            Logger?.LogInformation("开始关闭模块...");
-            var shutdownContext = new ApplicationShutdownContext(serviceProvider);
+            if (_isDisposed)
+                return;
 
-            // 按初始化顺序的逆序关闭
-            for (int i = Modules.Count - 1; i >= 0; i--)
+            if (serviceProvider == null)
+                throw new ArgumentNullException(nameof(serviceProvider));
+
+            try
             {
-                var module = Modules[i];
-                Logger?.LogDebug("执行 OnApplicationShutdownAsync: {ModuleName}", module.GetType().FullName);
-                try
+                _logger.LogInformation("开始关闭模块...");
+                var shutdownContext = new ApplicationShutdownContext(serviceProvider);
+
+                // 按初始化顺序的逆序关闭
+                for (int i = _modules.Count - 1; i >= 0; i--)
                 {
-                    await module.OnApplicationShutdownAsync(shutdownContext);
+                    var module = _modules[i];
+                    _logger.LogDebug("执行 OnApplicationShutdownAsync: {ModuleName}",
+                        module.GetType().FullName);
+
+                    try
+                    {
+                        await module.OnApplicationShutdownAsync(shutdownContext);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "关闭模块 {ModuleName} 时发生错误",
+                            module.GetType().FullName);
+                        // 继续关闭其他模块
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Logger?.LogError(ex, "关闭模块 {ModuleName} 时发生错误。", module.GetType().FullName);
-                    // 根据需要决定是否继续关闭其他模块
-                }
+
+                _logger.LogInformation("模块关闭完成");
             }
-            Logger?.LogInformation("模块关闭完成。");
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "模块关闭过程中发生错误");
+                throw;
+            }
         }
+
+        /// <summary>
+        /// 获取模块实例
+        /// </summary>
+        public IReadOnlyList<MokModule> GetModules() => _modules.AsReadOnly();
+
+        /// <summary>
+        /// 检查是否已释放
+        /// </summary>
+        private void ThrowIfDisposed()
+        {
+            if (_isDisposed)
+                throw new ObjectDisposedException(nameof(ModuleLoader));
+        }
+
+        /// <summary>
+        /// 释放资源
+        /// </summary>
         public void Dispose()
         {
-            // 如果模块实现了 IDisposable，可以在这里处理它们的 Dispose
-            foreach (var module in Modules.OfType<IDisposable>())
+            if (!_isDisposed)
             {
-                module.Dispose();
+                _isDisposed = true;
+
+                // 释放模块资源
+                foreach (var module in _modules.OfType<IDisposable>())
+                {
+                    try
+                    {
+                        module.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "释放模块 {ModuleName} 资源时发生错误",
+                            module.GetType().FullName);
+                    }
+                }
+
+                _modules.Clear();
             }
-            Modules.Clear();
+
             GC.SuppressFinalize(this);
         }
+
+        /// <summary>
+        /// 异步释放资源
+        /// </summary>
+        public async ValueTask DisposeAsync()
+        {
+            if (!_isDisposed)
+            {
+                _isDisposed = true;
+
+                // 异步释放模块资源
+                foreach (var module in _modules.OfType<IAsyncDisposable>())
+                {
+                    try
+                    {
+                        await module.DisposeAsync().ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "异步释放模块 {ModuleName} 资源时发生错误",
+                            module.GetType().FullName);
+                    }
+                }
+
+                // 同步释放其他模块
+                foreach (var module in _modules.OfType<IDisposable>().Where(m => !(m is IAsyncDisposable)))
+                {
+                    try
+                    {
+                        module.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "释放模块 {ModuleName} 资源时发生错误",
+                            module.GetType().FullName);
+                    }
+                }
+
+                _modules.Clear();
+            }
+        }
     }
-
-
 }

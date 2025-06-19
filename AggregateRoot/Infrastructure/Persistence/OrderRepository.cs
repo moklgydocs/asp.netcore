@@ -1,9 +1,8 @@
 using System;
-using System.Threading.Tasks;
-using AggregateRoot.Domain.Orders;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks; 
+using Microsoft.EntityFrameworkCore; 
 
-namespace AggregateRoot.Infrastructure.Persistence
+namespace Persistence
 {
     public sealed class OrderRepository : IOrderRepository
     {

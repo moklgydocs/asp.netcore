@@ -7,13 +7,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- JWT处理包 -->
+		<!-- JWT Bearer认证 -->
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-		<!-- 实体框架核心包 -->
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
-		<!-- API文档包 -->
+		<!-- Identity Server 4 访问令牌验证 -->
+		<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
+		<!-- Swagger文档 -->
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+		<!-- HTTP客户端 -->
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
 	</ItemGroup>
 
 </Project>

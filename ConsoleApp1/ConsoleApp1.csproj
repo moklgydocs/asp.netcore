@@ -8,12 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="BasicAuth\BasicAuth.csproj" />
+    <Compile Remove="OpenIddictDemo\**" />
+    <EmbeddedResource Remove="OpenIddictDemo\**" />
+    <None Remove="OpenIddictDemo\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="IdentityServer4Demo\ApiResource\ApiResource.csproj" />
     <None Include="IdentityServer4Demo\IdentityServer\IdentityServer.csproj" />
     <None Include="IdentityServer4Demo\WebClient\WebClient.csproj" />
-    <None Include="OpenIddictDemo\ApiResource\ApiResource.csproj" />
-    <None Include="OpenIddictDemo\AuthServer\AuthServer.csproj" />
     <None Include="SSODemo\AuthServer\AuthServer.csproj" />
     <None Include="SSODemo\Portal\Portal.csproj" />
   </ItemGroup>

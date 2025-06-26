@@ -1,3 +1,4 @@
+using BasicAuth.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BasicAuth.Controllers

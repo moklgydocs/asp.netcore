@@ -5,7 +5,7 @@ namespace BasicAuth.Services
     /// <summary>
     /// 用户服务接口
     /// </summary>
-    public interface IUser Service
+    public interface IUserService
     {
         /// <summary>
         /// 验证用户凭据

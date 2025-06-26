@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="BasicAuth\BasicAuth.csproj" />
+    <None Include="IdentityServer4Demo\ApiResource\ApiResource.csproj" />
+    <None Include="IdentityServer4Demo\IdentityServer\IdentityServer.csproj" />
+    <None Include="IdentityServer4Demo\WebClient\WebClient.csproj" />
+    <None Include="OpenIddictDemo\ApiResource\ApiResource.csproj" />
+    <None Include="OpenIddictDemo\AuthServer\AuthServer.csproj" />
+    <None Include="SSODemo\AuthServer\AuthServer.csproj" />
+    <None Include="SSODemo\Portal\Portal.csproj" />
+  </ItemGroup>
+
+</Project>

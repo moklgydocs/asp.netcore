@@ -5,6 +5,7 @@ using Serilog;
 using AuthServer.Data;
 using AuthServer.Models;
 using AuthServer.Services;
+using IdentityServer.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using AuthServer.Models;
 using AuthServer.Services;
+using IdentityServer.Data;
 
 namespace AuthServer.Data
 {

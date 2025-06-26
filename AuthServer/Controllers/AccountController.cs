@@ -8,6 +8,7 @@ using System.Security.Claims;
 using AuthServer.Models;
 using AuthServer.Services;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using System.ComponentModel.DataAnnotations;
 
 namespace AuthServer.Controllers
 {

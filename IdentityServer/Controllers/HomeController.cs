@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using IdentityServer4.Services;
 using IdentityServer.Models;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Mapster;
 
 namespace IdentityServer.Controllers
 {
@@ -52,7 +54,8 @@ namespace IdentityServer.Controllers
             var message = await _interaction.GetErrorContextAsync(errorId);
             if (message != null)
             {
-                vm.Error = message;
+                message.Adapt(vm.Error);
+                //vm.Error = message;
 
                 if (!_environment.IsDevelopment())
                 {
@@ -69,6 +72,7 @@ namespace IdentityServer.Controllers
     /// 安全头部属性
     /// 添加安全相关的HTTP头部
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class SecurityHeadersAttribute : ActionFilterAttribute
     {
         public override void OnResultExecuting(ResultExecutingContext context)

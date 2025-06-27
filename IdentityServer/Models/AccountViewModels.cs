@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityServer.Models
+namespace Id4sIdentityServer.Models
 {
     /// <summary>
     /// 登录输入模型
@@ -101,5 +101,34 @@ namespace IdentityServer.Models
         public string Error { get; set; } = string.Empty;
         public string? ErrorDescription { get; set; }
         public string? RequestId { get; set; }
+        //
+        // 摘要:
+        //     The display mode passed from the authorization request.
+        //
+        // 值:
+        //     The display mode.
+        public string DisplayMode { get; set; }
+
+        //
+        // 摘要:
+        //     The UI locales passed from the authorization request.
+        //
+        // 值:
+        //     The UI locales.
+        public string UiLocales { get; set; }   
+        //
+        // 摘要:
+        //     The redirect URI.
+        public string RedirectUri { get; set; }
+
+        //
+        // 摘要:
+        //     The response mode.
+        public string ResponseMode { get; set; }
+
+        //
+        // 摘要:
+        //     The client id making the request (if available).
+        public string ClientId { get; set; }
     }
 }

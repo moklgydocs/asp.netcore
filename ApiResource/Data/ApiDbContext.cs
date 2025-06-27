@@ -27,8 +27,8 @@ namespace ApiResource.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
                 entity.Property(e => e.Description).HasMaxLength(1000);
-                entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(e => e.Price);
+                entity.Property(e => e.CreatedAt);
                 entity.HasIndex(e => e.Category);
                 entity.HasIndex(e => e.IsActive);
             });
@@ -41,7 +41,7 @@ namespace ApiResource.Data
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(200);
                 entity.Property(e => e.Phone).HasMaxLength(20);
                 entity.Property(e => e.Address).HasMaxLength(500);
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(e => e.CreatedAt);
                 entity.HasIndex(e => e.Email).IsUnique();
             });
 
@@ -50,8 +50,8 @@ namespace ApiResource.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.OrderNumber).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.TotalAmount).HasColumnType("decimal(18,2)");
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(e => e.TotalAmount);
+                entity.Property(e => e.CreatedAt);
                 
                 entity.HasOne(e => e.Customer)
                       .WithMany(c => c.Orders)
@@ -66,8 +66,8 @@ namespace ApiResource.Data
             modelBuilder.Entity<OrderItem>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,2)");
-                entity.Property(e => e.TotalPrice).HasColumnType("decimal(18,2)");
+                entity.Property(e => e.UnitPrice);
+                entity.Property(e => e.TotalPrice);
 
                 entity.HasOne(e => e.Order)
                       .WithMany(o => o.Items)

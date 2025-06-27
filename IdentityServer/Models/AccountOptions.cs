@@ -1,4 +1,4 @@
-namespace IdentityServer.Models
+namespace Id4sIdentityServer.Models
 {
     /// <summary>
     /// 账户选项配置

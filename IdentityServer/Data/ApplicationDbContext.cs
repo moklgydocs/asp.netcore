@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using IdentityServer.Models;
+using Id4sIdentityServer.Models;
 
-namespace IdentityServer.Data
+namespace Id4sIdentityServer.Data
 {
     /// <summary>
     /// 应用程序数据库上下文

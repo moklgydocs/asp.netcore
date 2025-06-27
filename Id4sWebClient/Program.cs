@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using IdentityModel;
 using WebClient.Services;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,14 +27,14 @@ builder.Services.AddAuthentication(options =>
     // Identity Server配置
     options.Authority = "https://localhost:5001";
     options.RequireHttpsMetadata = false; // 开发环境可设为false
-    
+
     // 客户端配置
     options.ClientId = "web-client";
     options.ClientSecret = "web-client-secret";
-    
+
     // 使用授权码流程
     options.ResponseType = OpenIdConnectResponseType.Code;
-    
+
     // 请求的作用域
     options.Scope.Clear();
     options.Scope.Add("openid");
@@ -45,16 +46,16 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("api1.read");
     options.Scope.Add("api1.write");
     options.Scope.Add("api1.users");
-    
+
     // 启用离线访问（刷新令牌）
     options.Scope.Add("offline_access");
-    
+
     // 保存令牌到认证属性中
     options.SaveTokens = true;
-    
+
     // 获取用户信息端点的声明
     options.GetClaimsFromUserInfoEndpoint = true;
-    
+
     // 声明映射
     options.ClaimActions.DeleteClaim("amr");
     options.ClaimActions.DeleteClaim("s_hash");
@@ -63,18 +64,18 @@ builder.Services.AddAuthentication(options =>
     options.ClaimActions.DeleteClaim("aud");
     options.ClaimActions.DeleteClaim("azp");
     options.ClaimActions.DeleteClaim("at_hash");
-    
+
     // 映射自定义声明
     options.ClaimActions.MapJsonKey("role", "role", "role");
     options.ClaimActions.MapJsonKey("permission", "permission", "permission");
-    
+
     // 令牌验证参数
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
         NameClaimType = JwtClaimTypes.Name,
         RoleClaimType = JwtClaimTypes.Role,
     };
-    
+
     // 事件处理
     options.Events = new OpenIdConnectEvents
     {
@@ -109,10 +110,10 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
         policy.RequireRole("Admin"));
-        
+
     options.AddPolicy("ManagerOrAdmin", policy =>
         policy.RequireRole("Admin", "Manager"));
-        
+
     options.AddPolicy("UserManagement", policy =>
         policy.RequireClaim("permission", "user.manage"));
 });
@@ -127,10 +128,9 @@ builder.Services.AddScoped<IApiService, ApiService>();
 builder.Services.AddAccessTokenManagement(options =>
 {
     // 令牌管理选项
-    options.RefreshBeforeExpiration = TimeSpan.FromMinutes(5);
+    options.User.RefreshBeforeExpiration = TimeSpan.FromMinutes(5);
 })
-.ConfigureBackchannelHttpClient()
-.AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
+.ConfigureBackchannelHttpClient();
 
 var app = builder.Build();
 

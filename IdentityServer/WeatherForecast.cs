@@ -1,4 +1,4 @@
-namespace IdentityServer
+namespace Id4sIdentityServer
 {
     public class WeatherForecast
     {

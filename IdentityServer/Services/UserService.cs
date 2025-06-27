@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using IdentityServer.Models;
+using Id4sIdentityServer.Models;
 
-namespace IdentityServer.Services
+namespace Id4sIdentityServer.Services
 {
     /// <summary>
     /// 用户服务实现

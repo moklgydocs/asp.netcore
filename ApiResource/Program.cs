@@ -85,7 +85,7 @@ builder.Services.AddOpenIddict()
         options.AddAudiences("api1");
         
         // 使用本地验证（连接到同一个授权服务器）
-        options.UseLocalServer();
+        //options.UseLocalServer();
         
         // 注册ASP.NET Core宿主
         options.UseAspNetCore();

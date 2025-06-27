@@ -57,12 +57,12 @@ builder.Services.AddAuthentication("Bearer")
         // 是否启用缓存
         options.EnableCaching = true;
         options.CacheDuration = TimeSpan.FromMinutes(10);
-
+        // 关闭默认的声明类型映射，保持原始声明
+        //options.MapInboundClaims = false;
         // 声明映射
-        options.ClaimTypeMap.Clear();
-        options.ClaimTypeMap.Add("role", "role");
-        options.ClaimTypeMap.Add("permission", "permission");
-
+        //options.ClaimTypeMap.Clear();
+        //options.ClaimTypeMap.Add("role", "role");
+        //options.ClaimTypeMap.Add("permission", "permission"); 
         // JWT选项配置
         options.JwtValidationClockSkew = TimeSpan.FromMinutes(5);
 

@@ -1,6 +1,6 @@
-using IdentityServer.Models;
+using Id4sIdentityServer.Models;
 
-namespace IdentityServer.Services
+namespace Id4sIdentityServer.Services
 {
     /// <summary>
     /// 用户服务接口

@@ -2,9 +2,9 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using IdentityServer.Data;
-using IdentityServer.Models;
-using IdentityServer.Services;
+using Id4sIdentityServer.Services;
+using Id4sIdentityServer.Data;
+using Id4sIdentityServer.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

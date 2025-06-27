@@ -1,7 +1,7 @@
 using IdentityServer4;
 using IdentityServer4.Models;
 
-namespace IdentityServer
+namespace Id4sIdentityServer
 {
     /// <summary>
     /// Identity Server 4 配置类

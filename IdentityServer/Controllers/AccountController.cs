@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using IdentityServer4.Services;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
-using IdentityServer.Models;
-using IdentityServer.Services;
+using Id4sIdentityServer.Services;
+using Id4sIdentityServer.Models;
+using IdentityServer4.Models;
 
-namespace IdentityServer.Controllers
+namespace Id4sIdentityServer.Controllers
 {
     /// <summary>
     /// 账户控制器
@@ -69,14 +70,14 @@ namespace IdentityServer.Controllers
             if (button != "login")
             {
                 // 用户点击了取消按钮
-                var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
-                if (context != null)
+                var authcontext = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+                if (authcontext != null)
                 {
                     // 如果用户取消，发送访问被拒绝的结果
-                    await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
+                    await _interaction.DenyAuthorizationAsync(authcontext, AuthorizationError.AccessDenied);
 
                     // 我们可以信任model.ReturnUrl，因为GetAuthorizationContextAsync返回了非null
-                    if (context.IsNativeClient())
+                    if (authcontext.IsNativeClient())
                     {
                         // 原生客户端需要特殊处理
                         return this.LoadingPage("Redirect", model.ReturnUrl);

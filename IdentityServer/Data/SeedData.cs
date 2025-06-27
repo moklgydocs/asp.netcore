@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
-using IdentityServer.Models;
+using Id4sIdentityServer.Models;
 
-namespace IdentityServer.Data
+namespace Id4sIdentityServer.Data
 {
     /// <summary>
     /// 数据库种子数据初始化

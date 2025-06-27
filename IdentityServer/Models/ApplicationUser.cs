@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServer.Models
+namespace Id4sIdentityServer.Models
 {
     /// <summary>
     /// 应用程序用户模型

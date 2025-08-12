@@ -41,6 +41,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthenticateAuthorization",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicAuth", "BasicAuth\BasicAuth.csproj", "{C994C495-3350-4ED9-8D12-DE75AB68BAF7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RBAC", "RBAC", "{88BB578F-C41E-4ADC-9907-1A01171093FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PermissionManagement.Permissions.Domain", "PermissionManagement.Permissions.Domain\PermissionManagement.Permissions.Domain.csproj", "{4C11AD7B-349F-4C36-8999-3CDBE86707E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -195,6 +199,18 @@ Global
 		{C994C495-3350-4ED9-8D12-DE75AB68BAF7}.Release|x64.Build.0 = Release|Any CPU
 		{C994C495-3350-4ED9-8D12-DE75AB68BAF7}.Release|x86.ActiveCfg = Release|Any CPU
 		{C994C495-3350-4ED9-8D12-DE75AB68BAF7}.Release|x86.Build.0 = Release|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Debug|x64.Build.0 = Debug|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Debug|x86.Build.0 = Debug|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Release|x64.ActiveCfg = Release|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Release|x64.Build.0 = Release|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Release|x86.ActiveCfg = Release|Any CPU
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -203,6 +219,7 @@ Global
 		{AEF57866-B629-44B4-90C4-046B0F22DD34} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{44A296D5-66C5-4E20-8560-2D29787C899F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{C994C495-3350-4ED9-8D12-DE75AB68BAF7} = {14076C43-BDEE-45CC-8C1D-44EED2F8128D}
+		{4C11AD7B-349F-4C36-8999-3CDBE86707E3} = {88BB578F-C41E-4ADC-9907-1A01171093FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {785300F1-2D59-49F6-AA85-99636AF803CE}

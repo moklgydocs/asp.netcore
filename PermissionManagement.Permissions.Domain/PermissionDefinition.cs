@@ -1,4 +1,4 @@
-﻿namespace PermissionManagement.Permissions.Domain
+﻿namespace MokPermissions.Domain
 {
     /// <summary>
     /// 表示系统中的一个权限

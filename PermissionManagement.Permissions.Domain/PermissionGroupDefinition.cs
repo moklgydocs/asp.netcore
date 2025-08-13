@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PermissionManagement.Permissions.Domain
+namespace MokPermissions.Domain
 {
     /// <summary>
     /// 表示权限组，用于对权限进行分类

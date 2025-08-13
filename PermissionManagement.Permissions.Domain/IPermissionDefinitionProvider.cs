@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PermissionManagement.Permissions.Domain
+namespace MokPermissions.Domain
 {
     /// <summary>
     /// 权限提供者接口，用于定义系统中的权限

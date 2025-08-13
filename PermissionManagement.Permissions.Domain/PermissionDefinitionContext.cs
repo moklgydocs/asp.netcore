@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PermissionManagement.Permissions.Domain
+namespace MokPermissions.Domain
 {
     /// <summary>  
     /// 权限定义存储，用于管理系统中所有权限的定义和分组。  

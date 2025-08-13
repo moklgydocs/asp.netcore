@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PermissionManagement.Permissions.Domain
+namespace MokPermissions.Domain
 {
     /// <summary>
     /// 权限提供者管理器，用于管理和获取所有权限提供者

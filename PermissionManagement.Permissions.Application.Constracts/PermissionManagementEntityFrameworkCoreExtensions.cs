@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using MokPermissions.Domain;
 using MokPermissions.EntityframeworkCore;
 using System;
 using System.Collections.Generic;

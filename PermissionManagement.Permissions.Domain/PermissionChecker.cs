@@ -1,5 +1,4 @@
 ﻿using MokPermissions.Application.Contracts;
-using MokPermissions.Domain;
 using MokPermissions.Domain.Shared;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MokPermissions.Application
+namespace MokPermissions.Domain
 {
     /// <summary>
     /// 权限检查器实现

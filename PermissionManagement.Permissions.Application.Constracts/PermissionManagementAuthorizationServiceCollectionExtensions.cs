@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
-using MokPermissions.Applications;
 using MokPermissions.Domain;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -34,7 +33,7 @@ namespace MokPermissions.Application.Contracts
             services.AddScoped<IPermissionManager, PermissionManager>();
 
             // 注册权限授权处理程序
-            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
             // 添加授权策略提供程序
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();

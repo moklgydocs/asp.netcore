@@ -1,10 +1,8 @@
-﻿using MokPermissions.Application.Contracts;
-using MokPermissions.Domain;
-using MokPermissions.Domain.Shared;
+﻿using MokPermissions.Domain.Shared;
 using System.Collections.Concurrent;
 using System.Security;
 
-namespace MokPermissions.Applications
+namespace MokPermissions.Domain
 {
     /// <summary>
     /// 基于内存的权限存储实现

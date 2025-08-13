@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MokPermissions.Application.Contracts
+namespace MokPermissions.Domain
 {
     /// <summary>
     /// 权限检查器接口

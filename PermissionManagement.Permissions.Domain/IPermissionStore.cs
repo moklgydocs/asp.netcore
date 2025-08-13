@@ -1,5 +1,4 @@
-﻿using MokPermissions.Domain;
-using MokPermissions.Domain.Shared;
+﻿using MokPermissions.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MokPermissions.Application.Contracts
+namespace MokPermissions.Domain
 {
     /// <summary>
     /// 权限授权存储接口，用于存储和检索权限授权信息

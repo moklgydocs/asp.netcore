@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MokPermissions.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MokPermissions.EntityframeworkCore", "MokPermissions.EntityframeworkCore\MokPermissions.EntityframeworkCore.csproj", "{CFF04AC6-A6B7-4CE1-A23D-CF23CCCE2D8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MokPermissions.Web.HttpApi", "MokPermissions.Web.HttpApi\MokPermissions.Web.HttpApi.csproj", "{B1514A9A-E532-4836-9454-0A6320C66798}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -267,6 +269,18 @@ Global
 		{CFF04AC6-A6B7-4CE1-A23D-CF23CCCE2D8F}.Release|x64.Build.0 = Release|Any CPU
 		{CFF04AC6-A6B7-4CE1-A23D-CF23CCCE2D8F}.Release|x86.ActiveCfg = Release|Any CPU
 		{CFF04AC6-A6B7-4CE1-A23D-CF23CCCE2D8F}.Release|x86.Build.0 = Release|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Debug|x64.Build.0 = Debug|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Debug|x86.Build.0 = Debug|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Release|x64.ActiveCfg = Release|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Release|x64.Build.0 = Release|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Release|x86.ActiveCfg = Release|Any CPU
+		{B1514A9A-E532-4836-9454-0A6320C66798}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -280,6 +294,7 @@ Global
 		{85C684B4-F50E-4E89-8DCD-2DA816ADE44B} = {88BB578F-C41E-4ADC-9907-1A01171093FF}
 		{D02B8EB7-4634-4696-8E3E-4FEBE3C5DC46} = {88BB578F-C41E-4ADC-9907-1A01171093FF}
 		{CFF04AC6-A6B7-4CE1-A23D-CF23CCCE2D8F} = {88BB578F-C41E-4ADC-9907-1A01171093FF}
+		{B1514A9A-E532-4836-9454-0A6320C66798} = {88BB578F-C41E-4ADC-9907-1A01171093FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {785300F1-2D59-49F6-AA85-99636AF803CE}

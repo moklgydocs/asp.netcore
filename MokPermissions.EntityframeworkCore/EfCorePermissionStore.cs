@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MokPermissions.Application.Contracts;
 using MokPermissions.Domain;
 using MokPermissions.Domain.Shared;
 using System;

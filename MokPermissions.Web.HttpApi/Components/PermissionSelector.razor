@@ -1,0 +1,58 @@
+﻿@namespace MokPermissions.Web.HttpApi.Components
+
+
+<div class="permission-selector">
+    @foreach (var group in Groups)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@group.DisplayName</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    @foreach (var permission in group.Permissions)
+                    {
+                        <button type="button"
+                                class="list-group-item list-group-item-action @(SelectedPermission == permission.Name ? "active" : "")"
+                                @onclick="() => OnPermissionSelected(permission.Name)">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@permission.DisplayName</strong>
+                                    @if (!string.IsNullOrEmpty(permission.Description))
+                                    {
+                                        <small class="text-muted d-block">@permission.Description</small>
+                                    }
+                                </div>
+                                @if (permission.IsGranted)
+                                {
+                                    <span class="badge badge-success">已授权</span>
+                                }
+                            </div>
+                        </button>
+
+                        @foreach (var child in permission.Children)
+                        {
+                            <button type="button"
+                                    class="list-group-item list-group-item-action pl-5 @(SelectedPermission == child.Name ? "active" : "")"
+                                    @onclick="() => OnPermissionSelected(child.Name)">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span>@child.DisplayName</span>
+                                        @if (!string.IsNullOrEmpty(child.Description))
+                                        {
+                                            <small class="text-muted d-block">@child.Description</small>
+                                        }
+                                    </div>
+                                    @if (child.IsGranted)
+                                    {
+                                        <span class="badge badge-success">已授权</span>
+                                    }
+                                </div>
+                            </button>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

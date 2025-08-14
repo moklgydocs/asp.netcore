@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MokPermissions.Domain.Shared;
+using MokPermissions.Application.Contracts;
 
-namespace MokPermissions.Application.Contracts
+namespace MokPermissions.Application.Contracts.Extensions
 {
     public static class PermissionManagementAuthorizationServiceCollectionExtensions
     {

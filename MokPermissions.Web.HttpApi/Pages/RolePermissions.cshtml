@@ -1,0 +1,70 @@
+﻿@page
+@using MokPermissions.Domain
+@model MokPermissions.Web.HttpApi.Pages.RolePermissionsModel
+@{
+}
+@inject IPermissionChecker PermissionChecker
+@{
+    ViewData["Title"] = "角色权限";
+    var canUpdate = await PermissionChecker.IsGrantedAsync("RoleManagement.Update");
+}
+
+<h2>角色权限</h2>
+<h4>为角色 @Model.RoleName 管理权限</h4>
+
+<form method="post">
+    <input type="hidden" asp-for="RoleId" />
+
+    @foreach (var group in Model.Groups)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@group.DisplayName</h5>
+            </div>
+            <div class="card-body">
+                @foreach (var permission in group.Permissions)
+                {
+                    <div class="form-check">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="SelectedPermissions"
+                               value="@permission.Name"
+                        @(permission.IsGranted ? "checked" : "")
+                        @(!canUpdate ? "disabled" : "") />
+                        <label class="form-check-label">
+                            @permission.DisplayName
+                            @if (!string.IsNullOrEmpty(permission.Description))
+                            {
+                                <small class="text-muted">(@permission.Description)</small>
+                            }
+                        </label>
+                    </div>
+
+                    @foreach (var child in permission.Children)
+                    {
+                        <div class="form-check ml-4">
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   name="SelectedPermissions"
+                                   value="@child.Name"
+                            @(child.IsGranted ? "checked" : "")
+                            @(!canUpdate ? "disabled" : "") />
+                            <label class="form-check-label">
+                                @child.DisplayName
+                                @if (!string.IsNullOrEmpty(child.Description))
+                                {
+                                    <small class="text-muted">(@child.Description)</small>
+                                }
+                            </label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    @if (canUpdate)
+    {
+        <button type="submit" class="btn btn-primary">保存更改</button>
+    }
+</form>

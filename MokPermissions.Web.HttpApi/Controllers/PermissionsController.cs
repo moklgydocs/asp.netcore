@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MokPermissions.Application.Contracts.Dtos;
 using MokPermissions.Domain;
+using MokPermissions.Domain.Shared;
 
 namespace MokPermissions.Web.HttpApi.Controllers
 {

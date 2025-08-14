@@ -41,6 +41,11 @@ namespace MokPermissions.Domain
         /// </summary>
         public DateTime CreationTime { get; set; }
 
+        /// <summary>
+        /// 租户ID，null表示宿主
+        /// </summary>
+        public Guid? TenantId { get; set; }
+
         public PermissionGrant()
         {
             Id = Guid.NewGuid();
@@ -51,6 +56,7 @@ namespace MokPermissions.Domain
             string name,
             string providerName,
             string providerKey,
+             Guid? tenantId = null,
             bool isGranted = true)
             : this()
         {
@@ -58,6 +64,7 @@ namespace MokPermissions.Domain
             ProviderName = providerName;
             ProviderKey = providerKey;
             IsGranted = isGranted;
+            TenantId = tenantId;
         }
     }
 }

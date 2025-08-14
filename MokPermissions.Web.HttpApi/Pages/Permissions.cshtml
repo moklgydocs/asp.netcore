@@ -1,0 +1,90 @@
+﻿@page
+@model MokPermissions.Web.HttpApi.Pages.PermissionsModel
+@{
+    ViewData["Title"] = "权限管理";
+}
+
+<h2>权限管理</h2>
+<h4>为 @Model.ProviderName:@Model.ProviderKey 管理权限</h4>
+
+<div class="row">
+    <div class="col-md-12">
+        @foreach (var group in Model.Groups)
+        {
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>@group.DisplayName</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>权限</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var permission in group.Permissions)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (permission.Children.Any())
+                                        {
+                                            <strong>@permission.DisplayName</strong>
+                                        }
+                                        else
+                                        {
+                                            <span>@permission.DisplayName</span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(permission.Description))
+                                        {
+                                            <small class="text-muted d-block">@permission.Description</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <form method="post">
+                                            <input type="hidden" name="permissionName" value="@permission.Name" />
+                                            <div class="btn-group" role="group">
+                                                <button type="submit" name="isGranted" value="true" class="btn @(permission.IsGranted ? "btn-success" : "btn-outline-success")">
+                                                    授予
+                                                </button>
+                                                <button type="submit" name="isGranted" value="false" class="btn @(permission.IsProhibited ? "btn-danger" : "btn-outline-danger")">
+                                                    禁止
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @foreach (var child in permission.Children)
+                                {
+                                    <tr>
+                                        <td class="pl-4">
+                                            <span>@child.DisplayName</span>
+                                            @if (!string.IsNullOrEmpty(child.Description))
+                                            {
+                                                <small class="text-muted d-block">@child.Description</small>
+                                            }
+                                        </td>
+                                        <td>
+                                            <form method="post">
+                                                <input type="hidden" name="permissionName" value="@child.Name" />
+                                                <div class="btn-group" role="group">
+                                                    <button type="submit" name="isGranted" value="true" class="btn @(child.IsGranted ? "btn-success" : "btn-outline-success")">
+                                                        授予
+                                                    </button>
+                                                    <button type="submit" name="isGranted" value="false" class="btn @(child.IsProhibited ? "btn-danger" : "btn-outline-danger")">
+                                                        禁止
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</div>

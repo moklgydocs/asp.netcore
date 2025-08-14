@@ -41,7 +41,7 @@ namespace MokPermissions.Domain
         public Task SaveAsync(string permissionName, string providerName, string providerKey, bool isGranted)
         {
             var key = GetKey(permissionName, providerName, providerKey);
-            var permissionGrant = new PermissionGrant(permissionName, providerName, providerKey, isGranted);
+            var permissionGrant = new PermissionGrant(permissionName, providerName, providerKey,null, isGranted);
             //_permissions[key] = permissionGrant;
             _permissions.AddOrUpdate(key, permissionGrant, (k, v) => permissionGrant);
             return Task.CompletedTask;

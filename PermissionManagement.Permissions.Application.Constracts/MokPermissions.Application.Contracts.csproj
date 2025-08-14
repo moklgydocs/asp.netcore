@@ -10,7 +10,8 @@
 	  <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.19" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" /> 
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+	  <PackageReference Include="Scrutor.AspNetCore" Version="3.3.0" /> 
   </ItemGroup>
 
   <ItemGroup>

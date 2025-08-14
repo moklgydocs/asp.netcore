@@ -1,6 +1,8 @@
 ﻿using MokPermissions.EntityframeworkCore;
-using MokPermissions.Application.Contracts;
+using MokPermissions.Application.Contracts.Extensions;
 using Microsoft.EntityFrameworkCore;
+using MokPermissions.Domain;
+using MokPermissions.Application.Contracts.Middleware;
 
 namespace MokPermissions.Web.HttpApi
 {
@@ -25,17 +27,29 @@ namespace MokPermissions.Web.HttpApi
             services.AddPermissionManagementEntityFrameworkCore(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
+            // 添加权限缓存
+            services.AddPermissionCaching();
+
+            // 添加多租户支持
+            services.AddPermissionMultiTenancy();
+
+            // 添加事件支持
+            services.AddPermissionEvents();
+
+            // 添加权限服务
+            services.AddPermissionServices();
+
             // 添加控制器和Razor页面
             services.AddControllers();
             services.AddRazorPages();
 
             // 添加认证
-            services.AddAuthentication("Cookie")
-                .AddCookie("Cookie", options =>
-                {
-                    options.LoginPath = "/Account/Login";
-                    options.AccessDeniedPath = "/Account/AccessDenied";
-                });
+            //services.AddAuthentication("Cookie")
+            //    .AddCookie("Cookie", options =>
+            //    {
+            //        options.LoginPath = "/Account/Login";
+            //        options.AccessDeniedPath = "/Account/AccessDenied";
+            //    });
 
             // 添加授权
             services.AddAuthorization();
@@ -48,6 +62,8 @@ namespace MokPermissions.Web.HttpApi
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<PermissionManagementDbContext>();
                 dbContext.Database.EnsureCreated();
+                // 初始化基本权限数据
+                SeedData(scope.ServiceProvider);
             }
 
             if (env.IsDevelopment())
@@ -65,6 +81,9 @@ namespace MokPermissions.Web.HttpApi
 
             app.UseRouting();
 
+            // 多租户中间件（提取当前租户信息）
+            app.UseMiddleware<MultiTenancyMiddleware>();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -73,6 +92,21 @@ namespace MokPermissions.Web.HttpApi
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
+        }
+
+
+        private void SeedData(IServiceProvider serviceProvider)
+        {
+            var permissionManager = serviceProvider.GetRequiredService<IPermissionManager>();
+
+            // 创建管理员角色并授予所有权限
+            var permissionDefinitionManager = serviceProvider.GetRequiredService<PermissionDefinitionManager>();
+            var permissions = permissionDefinitionManager.GetPermissions();
+
+            foreach (var permission in permissions)
+            {
+                permissionManager.GrantAsync(permission.Name, "R", "Admin").Wait();
+            }
         }
     }
 }

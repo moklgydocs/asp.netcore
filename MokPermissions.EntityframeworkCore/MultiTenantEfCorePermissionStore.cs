@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MokPermissions.Domain;
 using MokPermissions.Domain.Shared;
+using MokPermissions.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +10,19 @@ using System.Threading.Tasks;
 namespace MokPermissions.EntityframeworkCore
 {
     /// <summary>
-    /// 基于EF Core的权限存储实现
+    /// 支持多租户的EF Core权限存储实现
     /// </summary>
-    public class EfCorePermissionStore : IPermissionStore
+    public class MultiTenantEfCorePermissionStore : IPermissionStore
     {
         private readonly PermissionManagementDbContext _dbContext;
+        private readonly ICurrentTenant _currentTenant;
 
-        public EfCorePermissionStore(PermissionManagementDbContext dbContext)
+        public MultiTenantEfCorePermissionStore(
+            PermissionManagementDbContext dbContext,
+            ICurrentTenant currentTenant)
         {
             _dbContext = dbContext;
+            _currentTenant = currentTenant;
         }
 
         public async Task<PermissionGrantStatus> IsGrantedAsync(string name, string providerName, string providerKey)
@@ -27,7 +31,8 @@ namespace MokPermissions.EntityframeworkCore
                 .FirstOrDefaultAsync(p =>
                     p.Name == name &&
                     p.ProviderName == providerName &&
-                    p.ProviderKey == providerKey);
+                    p.ProviderKey == providerKey &&
+                    p.TenantId == _currentTenant.Id);
 
             if (permissionGrant == null)
             {
@@ -42,7 +47,10 @@ namespace MokPermissions.EntityframeworkCore
         public async Task<List<PermissionGrant>> GetAllAsync(string providerName, string providerKey)
         {
             return await _dbContext.PermissionGrants
-                .Where(p => p.ProviderName == providerName && p.ProviderKey == providerKey)
+                .Where(p =>
+                    p.ProviderName == providerName &&
+                    p.ProviderKey == providerKey &&
+                    p.TenantId == _currentTenant.Id)
                 .ToListAsync();
         }
 
@@ -52,7 +60,8 @@ namespace MokPermissions.EntityframeworkCore
                 .FirstOrDefaultAsync(p =>
                     p.Name == permissionName &&
                     p.ProviderName == providerName &&
-                    p.ProviderKey == providerKey);
+                    p.ProviderKey == providerKey &&
+                    p.TenantId == _currentTenant.Id);
 
             if (permissionGrant == null)
             {
@@ -60,7 +69,7 @@ namespace MokPermissions.EntityframeworkCore
                     permissionName,
                     providerName,
                     providerKey,
-                    tenantId: null, // 假设没有租户ID，或根据需要传入
+                    _currentTenant.Id,
                     isGranted
                 );
 
@@ -80,7 +89,8 @@ namespace MokPermissions.EntityframeworkCore
                 .FirstOrDefaultAsync(p =>
                     p.Name == permissionName &&
                     p.ProviderName == providerName &&
-                    p.ProviderKey == providerKey);
+                    p.ProviderKey == providerKey &&
+                    p.TenantId == _currentTenant.Id);
 
             if (permissionGrant != null)
             {

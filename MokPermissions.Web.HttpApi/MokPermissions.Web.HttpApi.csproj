@@ -16,4 +16,8 @@
     <ProjectReference Include="..\PermissionManagement.Permissions.Application.Constracts\MokPermissions.Application.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

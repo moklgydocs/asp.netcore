@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MokPermissions.Application.Contracts
+namespace MokPermissions.Application.Contracts.Extensions
 {
     public static class PermissionManagementEntityFrameworkCoreExtensions
     {

@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MokPermissions.Application.Contracts
+namespace MokPermissions.Domain.Shared
 {
     /// <summary>
     /// 当前用户接口，用于获取当前用户信息

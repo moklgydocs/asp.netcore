@@ -1,5 +1,4 @@
-﻿using MokPermissions.Application.Contracts;
-using MokPermissions.Domain.Shared;
+﻿using MokPermissions.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;

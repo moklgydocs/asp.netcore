@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MokPermissions.Application.Contracts;
 using MokPermissions.Domain;
 
-namespace MokPermissions.Application.Contracts.Extensions
+namespace MokPermissions.Application.Extensions
 {
 
     public static class PermissionManagementServiceCollectionExtensions

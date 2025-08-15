@@ -1,21 +1,22 @@
-﻿using MokPermissions.Domain;
+﻿using MokPermissions.Application.Contracts;
+using MokPermissions.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MokPermissions.Application.Contracts
+namespace MokPermissions.Application
 {
     /// <summary>
-    /// 用户权限管理服务实现
+    /// 角色权限管理服务实现
     /// </summary>
-    public class UserPermissionService : IUserPermissionService
+    public class RolePermissionService : IRolePermissionService
     {
         private readonly IPermissionManager _permissionManager;
         private readonly PermissionDefinitionManager _permissionDefinitionManager;
 
-        public UserPermissionService(
+        public RolePermissionService(
             IPermissionManager permissionManager,
             PermissionDefinitionManager permissionDefinitionManager)
         {
@@ -23,15 +24,25 @@ namespace MokPermissions.Application.Contracts
             _permissionDefinitionManager = permissionDefinitionManager;
         }
 
-        public async Task<List<PermissionGrant>> GetPermissionsAsync(Guid userId)
+        public async Task<List<PermissionGrant>> GetPermissionsAsync(Guid roleId)
         {
-            return await _permissionManager.GetAllAsync("U", userId.ToString());
+            return await _permissionManager.GetAllAsync("R", roleId.ToString());
         }
 
-        public async Task SetPermissionsAsync(Guid userId, List<string> permissionNames)
+        public async Task<List<PermissionGrant>> GetPermissionsAsync(string roleName)
+        {
+            return await _permissionManager.GetAllAsync("R", roleName);
+        }
+
+        public async Task SetPermissionsAsync(Guid roleId, List<string> permissionNames)
+        {
+            await SetPermissionsAsync(roleId.ToString(), permissionNames);
+        }
+
+        public async Task SetPermissionsAsync(string roleName, List<string> permissionNames)
         {
             // 获取现有权限
-            var existingPermissions = await _permissionManager.GetAllAsync("U", userId.ToString());
+            var existingPermissions = await _permissionManager.GetAllAsync("R", roleName);
             var existingPermissionNames = existingPermissions
                 .Where(p => p.IsGranted)
                 .Select(p => p.Name)
@@ -52,14 +63,15 @@ namespace MokPermissions.Application.Contracts
                 // 验证权限名称是否存在
                 _permissionDefinitionManager.GetPermission(permissionName);
 
-                await _permissionManager.GrantAsync(permissionName, "U", userId.ToString());
+                await _permissionManager.GrantAsync(permissionName, "R", roleName);
             }
 
             // 删除移除的权限
             foreach (var permissionName in removedPermissions)
             {
-                await _permissionManager.RevokeAsync(permissionName, "U", userId.ToString());
+                await _permissionManager.RevokeAsync(permissionName, "R", roleName);
             }
         }
     }
+
 }

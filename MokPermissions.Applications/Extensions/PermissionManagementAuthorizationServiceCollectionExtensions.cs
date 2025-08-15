@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using MokPermissions.Domain.Shared;
 using MokPermissions.Application.Contracts;
 
-namespace MokPermissions.Application.Contracts.Extensions
+namespace MokPermissions.Application.Extensions
 {
     public static class PermissionManagementAuthorizationServiceCollectionExtensions
     {

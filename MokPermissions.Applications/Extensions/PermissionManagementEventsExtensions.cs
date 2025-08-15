@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MokPermissions.Application.Contracts.Extensions
+namespace MokPermissions.Application.Extensions
 {
     public static class PermissionManagementEventsExtensions
     {

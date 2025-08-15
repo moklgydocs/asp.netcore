@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Mok.Modularity\Mok.Modularity.csproj" />
-    <ProjectReference Include="..\PermissionManagement.Permissions.Domain\MokPermissions.Domain.csproj" />
+    <ProjectReference Include="..\MokPermissions.Domain\MokPermissions.Domain.csproj" />
   </ItemGroup>
 
 </Project>

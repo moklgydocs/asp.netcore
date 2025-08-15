@@ -1,6 +1,0 @@
-@SSOAuthServer_HostAddress = http://localhost:5228
-
-GET {{SSOAuthServer_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

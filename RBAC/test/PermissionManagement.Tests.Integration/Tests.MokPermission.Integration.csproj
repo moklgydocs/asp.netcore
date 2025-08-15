@@ -14,6 +14,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\MokPermissions.Applications\MokPermissions.Application.csproj" />
+		<ProjectReference Include="..\..\src\MokPermissions.Domain.Shared\MokPermissions.Domain.Shared.csproj" />
+		<ProjectReference Include="..\..\src\MokPermissions.Domain\MokPermissions.Domain.csproj" />
 		<ProjectReference Include="..\..\src\PermissionManagement.Permissions.Application.Constracts\MokPermissions.Application.Contracts.csproj" />
 	</ItemGroup>
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MokPermissions.Domain.Entitys;
-using MokPermissions.Domain.Shared;
+using MokPermissions.Domain.Store;
 
 namespace MokPermissions.Web.HttpApi.Controllers
 {

@@ -8,7 +8,7 @@
 	
   <ItemGroup>
     <ProjectReference Include="..\..\..\Mok.Modularity\Mok.Modularity.csproj" />
-    <ProjectReference Include="..\PermissionManagement.Permissions.Application.Constracts\MokPermissions.Application.Contracts.csproj" />
+    <ProjectReference Include="..\MokPermissions.Application.Constracts\MokPermissions.Application.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

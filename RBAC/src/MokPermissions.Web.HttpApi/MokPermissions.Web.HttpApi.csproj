@@ -22,8 +22,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Mok.AspNetCore\Mok.AspNetCore.csproj" />
     <ProjectReference Include="..\MokPermissions.Applications\MokPermissions.Application.csproj" />
-    <ProjectReference Include="..\PermissionManagement.Permissions.Application.Constracts\MokPermissions.Application.Contracts.csproj" />
-    <ProjectReference Include="..\PermissionManagement.Permissions.Domain\MokPermissions.Domain.csproj" />
+    <ProjectReference Include="..\MokPermissions.Application.Constracts\MokPermissions.Application.Contracts.csproj" />
+    <ProjectReference Include="..\MokPermissions.Domain\MokPermissions.Domain.csproj" />
   </ItemGroup>
 
 </Project>

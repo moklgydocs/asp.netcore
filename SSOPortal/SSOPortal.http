@@ -1,6 +1,0 @@
-@SSOPortal_HostAddress = http://localhost:5112
-
-GET {{SSOPortal_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

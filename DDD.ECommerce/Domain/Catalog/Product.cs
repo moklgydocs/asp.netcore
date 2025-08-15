@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
+using DDD.ECommerce.Domain.Catalog.Events;
 using DDDCore.Domain;
-using ECommerce.Domain.Catalog.Events;
 
 namespace DDD.ECommerce.Domain.Catalog
 {

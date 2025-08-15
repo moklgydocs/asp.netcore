@@ -25,56 +25,56 @@ namespace DDD.ECommerce.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
+
             // 产品实体映射
             modelBuilder.Entity<Product>(entity =>
             {
-                entity.ToTable("Products");
-                entity.HasKey(e => e.Id);
-                
-                // 乐观并发控制
-                entity.Property(e => e.Version).IsRowVersion();
-                
-                // 复杂类型映射
-                entity.OwnsOne(e => e.Name, name =>
-                {
-                    name.Property(p => p.Value).HasColumnName("Name").IsRequired().HasMaxLength(100);
-                });
-                
-                entity.OwnsOne(e => e.Description, description =>
-                {
-                    description.Property(p => p.Value).HasColumnName("Description").HasMaxLength(2000);
-                });
-                
-                entity.OwnsOne(e => e.Price, price =>
-                {
-                    price.Property(p => p.Amount).HasColumnName("Price").HasColumnType("decimal(18,2)").IsRequired();
-                    price.Property(p => p.Currency).HasColumnName("Currency").IsRequired().HasMaxLength(3);
-                });
-                
-                entity.OwnsOne(e => e.Category, category =>
-                {
-                    category.Property(p => p.Type).HasColumnName("CategoryType").IsRequired();
-                    category.Property(p => p.SubCategory).HasColumnName("SubCategory").HasMaxLength(50);
-                });
-                
-                // 实体关系
-                entity.HasMany(p => p._images)
-                      .WithOne()
-                      .HasForeignKey("ProductId")
-                      .OnDelete(DeleteBehavior.Cascade);
+                //entity.ToTable("Products");
+                //entity.HasKey(e => e.Id);
+
+                //// 乐观并发控制
+                //entity.Property(e => e.Version).IsRowVersion();
+
+                //// 复杂类型映射
+                //entity.OwnsOne(e => e.Name, name =>
+                //{
+                //    name.Property(p => p.Value).HasColumnName("Name").IsRequired().HasMaxLength(100);
+                //});
+
+                //entity.OwnsOne(e => e.Description, description =>
+                //{
+                //    description.Property(p => p.Value).HasColumnName("Description").HasMaxLength(2000);
+                //});
+
+                //entity.OwnsOne(e => e.Price, price =>
+                //{
+                //    price.Property(p => p.Amount).HasColumnName("Price").HasColumnType("decimal(18,2)").IsRequired();
+                //    price.Property(p => p.Currency).HasColumnName("Currency").IsRequired().HasMaxLength(3);
+                //});
+
+                //entity.OwnsOne(e => e.Category, category =>
+                //{
+                //    category.Property(p => p.Type).HasColumnName("CategoryType").IsRequired();
+                //    category.Property(p => p.SubCategory).HasColumnName("SubCategory").HasMaxLength(50);
+                //});
+
+                //// 实体关系
+                //entity.HasMany(p => p._images)
+                //      .WithOne()
+                //      .HasForeignKey("ProductId")
+                //      .OnDelete(DeleteBehavior.Cascade);
             });
-            
+
             // 产品图片实体映射
             modelBuilder.Entity<ProductImage>(entity =>
             {
-                entity.ToTable("ProductImages");
+                //entity.ToTable("ProductImages");
                 entity.HasKey(e => e.Id);
-                
+
                 entity.Property(e => e.Url).IsRequired().HasMaxLength(500);
                 entity.Property(e => e.ContentType).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Description).HasMaxLength(500);
-                
+
                 // 添加产品外键
                 entity.Property<Guid>("ProductId").IsRequired();
             });
@@ -90,12 +90,12 @@ namespace DDD.ECommerce.Infrastructure.Data
                 .Where(x => x.Entity.DomainEvents.Any())
                 .Select(x => x.Entity)
                 .ToArray();
-            
+
             // 收集所有领域事件
             var domainEvents = aggregateRoots
                 .SelectMany(x => x.DomainEvents)
                 .ToArray();
-                
+
             return domainEvents;
         }
 
@@ -108,7 +108,7 @@ namespace DDD.ECommerce.Infrastructure.Data
                 .Where(x => x.Entity.DomainEvents.Any())
                 .Select(x => x.Entity)
                 .ToArray();
-                
+
             foreach (var aggregate in aggregateRoots)
             {
                 aggregate.ClearDomainEvents();

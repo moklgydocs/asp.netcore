@@ -46,8 +46,8 @@ namespace DDD.ECommerce.Domain.Catalog
             // 创建并返回实例
             return new Money
             {
-                Amount = Math.Round(amount, 2), // 保留两位小数
-                Currency = normalizedCurrency
+                //Amount = Math.Round(amount, 2), // 保留两位小数
+                //Currency = normalizedCurrency
             };
         }
         

@@ -43,8 +43,8 @@ namespace DDD.ECommerce.Domain.Catalog
                 
             return new ProductCategory 
             { 
-                Type = type, 
-                SubCategory = subCategory?.Trim() 
+                //Type = type, 
+                //SubCategory = subCategory?.Trim() 
             };
         }
         

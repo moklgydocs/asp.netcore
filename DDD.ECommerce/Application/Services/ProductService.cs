@@ -7,6 +7,7 @@ using DDD.ECommerce.Application.DTOs;
 using DDD.ECommerce.Application.Interfaces;
 using DDD.ECommerce.Domain.Catalog;
 using DDDCore.Infrastructure;
+using Domain.Catalog;
 
 namespace DDD.ECommerce.Application.Services
 {

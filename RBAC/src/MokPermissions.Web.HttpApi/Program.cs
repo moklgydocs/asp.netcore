@@ -1,15 +1,23 @@
+using Mok.AspNetCore;
+using System.Threading.Tasks;
+
 namespace MokPermissions.Web.HttpApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    // 关联 Startup 类
-                    webBuilder.UseStartup<Startup>();
-                }).Build().Run(); 
+            //Host.CreateDefaultBuilder(args)
+            //   .ConfigureWebHostDefaults(webBuilder =>
+            //   {
+            //       // 关联 Startup 类
+            //       webBuilder.UseStartup<Startup>();
+            //   }).Build().Run(); 
+            var builder = WebApplication.CreateBuilder(args);
+            await builder.AddApplicationAsync<MokPermissionWebModule>();
+            var app = builder.Build();
+            await app.InitializeApplicationAsync();
+            await app.RunAsync();
         }
     }
 }

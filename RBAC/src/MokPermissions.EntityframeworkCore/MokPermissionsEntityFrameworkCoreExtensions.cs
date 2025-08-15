@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MokPermissions.Domain.Store;
-using MokPermissions.EntityframeworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MokPermissions.Application.Extensions
+namespace MokPermissions.EntityframeworkCore
 {
     public static class MokPermissionsEntityFrameworkCoreExtensions
     {

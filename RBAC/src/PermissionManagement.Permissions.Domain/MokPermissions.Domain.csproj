@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Mok.Modularity\Mok.Modularity.csproj" />
     <ProjectReference Include="..\PermissionManagement.Permissions.Domain.Shared\MokPermissions.Domain.Shared.csproj" />
   </ItemGroup>
 

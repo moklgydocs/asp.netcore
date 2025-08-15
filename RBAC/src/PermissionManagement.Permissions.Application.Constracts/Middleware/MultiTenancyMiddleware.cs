@@ -23,7 +23,7 @@ namespace MokPermissions.Application.Contracts.Middleware
         public async Task InvokeAsync(HttpContext context, ICurrentTenant currentTenant)
         {
             // 从请求中提取租户ID（这里只是示例，实际中可能从域名、请求头、Cookie等提取）
-            if (context.Request.Headers.TryGetValue("Tenant-Id", out var tenantIdHeader) &&
+            if (context.Request.Headers.TryGetValue("TenantId", out var tenantIdHeader) &&
                 Guid.TryParse(tenantIdHeader, out var tenantId))
             {
                 using (currentTenant.Change(tenantId))

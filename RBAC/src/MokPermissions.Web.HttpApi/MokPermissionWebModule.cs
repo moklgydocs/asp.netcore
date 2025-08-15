@@ -56,7 +56,7 @@ namespace MokPermissions.Web.HttpApi
             app.UseRouting();
 
             // 多租户中间件（提取当前租户信息）
-            //app.UseMiddleware<MultiTenancyMiddleware>();// 这里的注入方式存在问题
+            app.UseMiddleware<MultiTenancyMiddleware>();// 这里的注入方式存在问题
 
             app.UseAuthentication();
             app.UseAuthorization();

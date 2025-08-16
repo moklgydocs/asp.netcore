@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MokPermissions.Domain.Shared.MultiTenant;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace MokPermissions.Domain.Entitys
     /// <summary>
     /// 用户
     /// </summary>
-    public class User
+    public class User: IHasTenant
     {
         /// <summary>
         /// 用户ID

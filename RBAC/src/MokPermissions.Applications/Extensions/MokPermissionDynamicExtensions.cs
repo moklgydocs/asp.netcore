@@ -1,5 +1,4 @@
-﻿using MokPermissions.Application.Contracts;
-using MokPermissions.Domain;
+﻿using MokPermissions.Domain;
 using MokPermissions.EntityframeworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using MokPermissions.Domain.Store;
+using MokPermissions.Application.Contracts.Providers;
 
 namespace MokPermissions.Application.Extensions
 {

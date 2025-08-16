@@ -12,9 +12,12 @@ namespace MokPermissions.Domain.Store
     {
         private readonly ConcurrentDictionary<string, PermissionGrant> _permissions;
 
+        //private readonly ICurrentTenant currentTenant;
+
         public InMemoryPermissionStore()
         {
             _permissions = new ConcurrentDictionary<string, PermissionGrant>();
+            //this.currentTenant = CurrentTenant.Id;
         }
         public Task DeleteAsync(string permissionName, string providerName, string providerKey)
         {
@@ -42,7 +45,7 @@ namespace MokPermissions.Domain.Store
         public Task SaveAsync(string permissionName, string providerName, string providerKey, bool isGranted)
         {
             var key = GetKey(permissionName, providerName, providerKey);
-            var permissionGrant = new PermissionGrant(permissionName, providerName, providerKey,null, isGranted);
+            var permissionGrant = new PermissionGrant(permissionName, providerName, providerKey, null, isGranted);
             //_permissions[key] = permissionGrant;
             _permissions.AddOrUpdate(key, permissionGrant, (k, v) => permissionGrant);
             return Task.CompletedTask;

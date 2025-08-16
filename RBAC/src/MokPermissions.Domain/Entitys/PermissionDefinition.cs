@@ -1,11 +1,13 @@
-﻿namespace MokPermissions.Domain
+﻿using MokPermissions.Domain.Shared.MultiTenant;
+
+namespace MokPermissions.Domain
 {
     /// <summary>
     /// 表示系统中的一个权限
     /// </summary>
-    public class PermissionDefinition
+    public class PermissionDefinition : IHasTenant
     {
-       
+
         /// <summary>
         /// 权限的唯一名称
         /// </summary>
@@ -36,6 +38,8 @@
         /// </summary>
         public string Group { get; set; }
 
+        public int? Level { get => GetLevel(); }
+
         /// <summary>
         /// 父权限，用于构建权限层次结构
         /// </summary>
@@ -45,6 +49,7 @@
         /// 子权限列表
         /// </summary>
         public List<PermissionDefinition> Children { get; }
+        public Guid? TenantId { get; set; }
 
         /// <summary>
         /// 创建一个新的权限定义
@@ -106,5 +111,14 @@
             }
             return $"{Parent.GetFullName()}.{Name}";
         }
+
+        /// <summary>
+        /// 获取权限的层级
+        /// </summary>
+        /// <returns></returns>
+        public int GetLevel() => Parent == null ? 1 : Parent.GetLevel() + 1;
+
+
+
     }
 }

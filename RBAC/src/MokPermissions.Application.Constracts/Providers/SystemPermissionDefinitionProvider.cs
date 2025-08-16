@@ -1,6 +1,6 @@
 ﻿using MokPermissions.Domain;
 
-namespace MokPermissions.Application.Contracts
+namespace MokPermissions.Application.Contracts.Providers
 {
     public class SystemPermissionDefinitionProvider : IPermissionDefinitionProvider
     {

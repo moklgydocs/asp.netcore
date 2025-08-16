@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MokPermissions.Domain.Shared.MultiTenant;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace MokPermissions.Domain.Entitys
     /// <summary>
     /// 动态权限实体
     /// </summary>
-    public class DynamicPermission
+    public class DynamicPermission: IHasTenant
     {
         /// <summary>
         /// 唯一标识符

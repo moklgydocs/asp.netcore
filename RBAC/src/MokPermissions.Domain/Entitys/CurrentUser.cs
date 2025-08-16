@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MokPermissions.Domain.Shared;
+using MokPermissions.Domain.Shared.MultiTenant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace MokPermissions.Domain.Entitys
     /// <summary>
     /// 当前用户实现
     /// </summary>
-    public class CurrentUser : ICurrentUser
+    public class CurrentUser : ICurrentUser, IHasTenant
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         public bool IsAuthenticated => Principal?.Identity?.IsAuthenticated ?? false;
@@ -24,6 +25,8 @@ namespace MokPermissions.Domain.Entitys
         public string[] Roles => FindClaimValues(ClaimTypes.Role);
 
         public ClaimsPrincipal Principal => _httpContextAccessor.HttpContext?.User;
+
+        public Guid? TenantId { get; set; }
 
         public CurrentUser(IHttpContextAccessor httpContextAccessor)
         {

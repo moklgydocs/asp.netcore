@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MokPermissions.Domain.Store;
 
-namespace MokPermissions.Application.Contracts
+namespace MokPermissions.Application.Contracts.Providers
 {
     /// <summary>
     /// 动态权限提供者，从数据库加载动态定义的权限

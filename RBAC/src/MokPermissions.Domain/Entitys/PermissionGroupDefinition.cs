@@ -1,15 +1,16 @@
-﻿using System;
+﻿using MokPermissions.Domain.Shared.MultiTenant;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MokPermissions.Domain
+namespace MokPermissions.Domain.Entitys
 {
     /// <summary>
     /// 表示权限组，用于对权限进行分类
     /// </summary>
-    public class PermissionGroupDefinition
+    public class PermissionGroupDefinition : IHasTenant
     {
         /// <summary>
         /// 权限组的名称
@@ -25,6 +26,7 @@ namespace MokPermissions.Domain
         /// 权限组中包含的权限列表
         /// </summary>
         public List<PermissionDefinition> Permissions { get; }
+        public Guid? TenantId { get; set; }
 
         /// <summary>
         /// 创建一个新的权限组
@@ -64,6 +66,11 @@ namespace MokPermissions.Domain
 
             Permissions.Add(permission);
             return permission;
+        }
+
+        public virtual PermissionDefinition GetPermission(string name)
+        {
+            return Permissions.FirstOrDefault(x => x.Name == name) ?? throw new ArgumentNullException(name);
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using MokPermissions.Application.Contracts;
+using MokPermissions.Application.Contracts.Providers;
 using MokPermissions.Domain;
 using MokPermissions.Domain.Manager;
 

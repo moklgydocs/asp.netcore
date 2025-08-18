@@ -1,5 +1,4 @@
-﻿using MokPermissions.Domain.Shared;
-using MokPermissions.EntityframeworkCore;
+﻿using MokPermissions.EntityframeworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using MokPermissions.Domain.Store;
 using MokPermissions.Domain.Entitys;
+using MokPermissions.Domain.Shared.MultiTenant;
 
 namespace MokPermissions.Application.Contracts.Middleware
 {

@@ -13,7 +13,7 @@ namespace MokPermissions.Application.Contracts
     public class MokPermissionsApplicationContractsModule : MokModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
-        { 
+        {
             // 添加多租户支持
             context.Services.AddPermissionMultiTenancy();
         }

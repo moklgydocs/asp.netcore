@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MokPermissions.Domain.Shared
+namespace MokPermissions.Domain.Shared.MultiTenant
 {
     /// <summary>
     /// 当前租户信息接口

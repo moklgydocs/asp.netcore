@@ -267,10 +267,10 @@ namespace Mok.Modularity
         /// </summary>
         private List<Type> SortModulesTopologically(List<Type> moduleTypes)
         {
-            if (moduleTypes.Count <= 1)
-            {
-                return moduleTypes;
-            }
+            //if (moduleTypes.Count <= 1)
+            //{
+            //    return moduleTypes;
+            //}
 
             var sortedList = new List<Type>(moduleTypes.Count);
             var inDegree = new Dictionary<Type, int>(moduleTypes.Count);

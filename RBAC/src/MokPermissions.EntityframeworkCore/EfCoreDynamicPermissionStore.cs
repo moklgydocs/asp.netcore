@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MokPermissions.Domain.Entitys;
-using MokPermissions.Domain.Shared;
+using MokPermissions.Domain.Shared.MultiTenant;
 using MokPermissions.Domain.Store;
 using System;
 using System.Collections.Generic;

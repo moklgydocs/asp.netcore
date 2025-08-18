@@ -10,8 +10,8 @@ using MokPermissions.EntityframeworkCore;
 namespace MokPermissions.Web.HttpApi
 {
     [DependsOn(typeof(MokPermissionEntityFrameworkCoreModule),
-        typeof(MokPermissionApplicationModule),
-        typeof(MokPermissionsApplicationContractsModule)
+        typeof(MokPermissionsApplicationContractsModule),
+        typeof(MokPermissionApplicationModule)
         )]
     public class MokPermissionWebModule : MokModule
     { 

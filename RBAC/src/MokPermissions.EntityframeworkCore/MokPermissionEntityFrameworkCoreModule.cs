@@ -14,14 +14,12 @@ namespace MokPermissions.EntityframeworkCore
     [DependsOn(typeof(MokPermissionsDomainModule))]
     public class MokPermissionEntityFrameworkCoreModule : MokModule
     {
-        private IConfiguration Configuration { get; }
-        public MokPermissionEntityFrameworkCoreModule(IConfiguration configuration)
-        {
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        }
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            var services = context.Services; 
+            var services = context.Services;
+
+            var Configuration = services.BuildServiceProvider().GetService<IConfiguration>();
+
             // 添加EF Core存储
             services.AddPermissionManagementEntityFrameworkCore(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));

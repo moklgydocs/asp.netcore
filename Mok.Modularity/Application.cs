@@ -7,8 +7,8 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using System.Reflection.PortableExecutable;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using System.Reflection.PortableExecutable; 
+using Microsoft.Extensions.Hosting;
 
 namespace Mok.Modularity
 {
@@ -36,7 +36,7 @@ namespace Mok.Modularity
         /// </summary>
         private ILoggerFactory LoggerFactory;
         private IApplicationBuilder AppBuilder;
-        private IHostingEnvironment Env;
+        private IHostEnvironment Env;
         private readonly ILogger<Application> Logger;
         private bool _isDisposed;
 
@@ -49,7 +49,7 @@ namespace Mok.Modularity
             IServiceCollection services,
             ILoggerFactory loggerFactory,
             IApplicationBuilder appBuilder,
-            IHostingEnvironment environment)
+            IHostEnvironment environment)
         {
             RootModuleType = rootModuleType ?? throw new ArgumentNullException(nameof(rootModuleType));
             services = services ?? throw new ArgumentNullException(nameof(services));
@@ -71,7 +71,7 @@ namespace Mok.Modularity
             ILoggerFactory loggerFactory = null,
             Assembly[] assembliesToScan = null,
             IApplicationBuilder appBuilder = null,
-            IHostingEnvironment env = null)
+            IHostEnvironment env = null)
         {
             // 验证参数
             if (rootModuleType == null) throw new ArgumentNullException(nameof(rootModuleType));
@@ -167,7 +167,7 @@ namespace Mok.Modularity
                 var appBuilderToUse = app ?? AppBuilder;
 
                 // 如果环境为空，尝试从服务提供程序获取
-                var envToUse = Env ?? ServiceProvider.GetService<IHostingEnvironment>();
+                var envToUse = Env ?? ServiceProvider.GetService<IHostEnvironment>();
                 // 初始化模块，执行 OnPreApplicationInitialization, OnApplicationInitialization, OnPostApplicationInitialization 
                 await ModuleLoader.InitializeModulesAsync(ServiceProvider, appBuilderToUse, envToUse);
             }

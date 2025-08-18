@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
@@ -360,7 +361,7 @@ namespace Mok.Modularity
         public async Task InitializeModulesAsync(
             IServiceProvider serviceProvider,
             IApplicationBuilder appBuilder,
-            IHostingEnvironment env)
+            IHostEnvironment env)
         {
             ThrowIfDisposed();
 

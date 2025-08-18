@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Mok.AspNetCore;
 using Mok.Modularity;
 using MokPermissions.Application;
 using MokPermissions.Application.Contracts;
@@ -22,6 +23,7 @@ namespace MokPermissions.Web.HttpApi
 
             services.AddControllers();
             services.AddRazorPages();
+            services.AddMokModuleSerilog();
 
             // 添加认证
             //services.AddAuthentication("Cookie")
@@ -57,7 +59,6 @@ namespace MokPermissions.Web.HttpApi
 
             // 多租户中间件（提取当前租户信息）
             app.UseMiddleware<MultiTenancyMiddleware>();// 这里的注入方式存在问题
-
             app.UseAuthentication();
             app.UseAuthorization(); 
 

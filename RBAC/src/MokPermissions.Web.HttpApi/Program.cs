@@ -9,8 +9,8 @@ namespace MokPermissions.Web.HttpApi
     {
         public static async Task<int> Main(string[] args)
         {
-            try
-            {
+            //try
+            //{
                 Log.Logger = new LoggerConfiguration() // 注意，这里不能用var Log = new LoggerConfiguration
 #if DEBUG
                     .MinimumLevel.Debug()
@@ -31,21 +31,19 @@ namespace MokPermissions.Web.HttpApi
                 await builder.AddApplicationAsync<MokPermissionWebModule>();
                 var app = builder.Build();
                 await app.InitializeApplicationAsync();
-                await app.RunAsync();
-                // 在应用程序资源释放后，释放Serilog资源
-                Log.CloseAndFlush();
+                await app.RunAsync(); 
                 return 0;
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal(ex, "Host terminated unexpectedly");
-                return 1;
-            }
-            finally
-            {
-                // 确保在程序退出时释放日志资源
-                Log.CloseAndFlush();
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Fatal(ex, "Host terminated unexpectedly");
+            //    return 1;
+            //}
+            //finally
+            //{
+            //    // 确保在程序退出时释放日志资源
+            //    Log.CloseAndFlush();
+            //}
         }
     }
 }

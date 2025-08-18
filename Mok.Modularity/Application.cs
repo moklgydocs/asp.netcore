@@ -90,16 +90,12 @@ namespace Mok.Modularity
             {
                 // 先注册应用程序实例到服务容器
                 services.AddSingleton<IApplication>(application);
-                GetDefaultLoggerFactory(loggerFactory);
+                //GetDefaultLoggerFactory(loggerFactory);
                 // 创建模块加载器
                 application.ModuleLoader = new ModuleLoader(services, loggerFactory);
 
                 // 加载模块并配置服务
-                await application.ModuleLoader.LoadModulesAsync(assembliesToScan);
-
-                // 注册模块加载器和根模块类型
-                //services.AddSingleton(application.ModuleLoader);
-                //services.AddSingleton(rootModuleType);
+                await application.ModuleLoader.LoadModulesAsync(assembliesToScan); 
 
                 // 构建服务提供程序
                 application.ServiceProvider = services.BuildServiceProvider(validateScopes: false);

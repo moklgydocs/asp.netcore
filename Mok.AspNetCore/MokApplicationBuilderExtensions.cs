@@ -3,6 +3,7 @@ using System.Dynamic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.Extensions.Logging;
 using Mok.Modularity;
 
 namespace Mok.AspNetCore
@@ -29,26 +30,22 @@ namespace Mok.AspNetCore
             CollectAssembliesRecursively(moduleType.Assembly, assembliesSet);
             var assemblies = assembliesSet.ToArray();
 
-            //var assemblies = new[] { typeof(TRootModule).Assembly };
-            //var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-            //    .Where(x => !x.IsDynamic && !IsSystemAssembly(x)).ToArray();
-            // 还可以添加加载尚未加载的程序集，根据命名约定查找
-            //var loadedAssemblies = assemblies.Select(a => a.FullName).ToList();
-            //var rootModuleAssemblyName = typeof(TRootModule).Assembly.GetName().Name; 
+            // 这个工厂会使用已配置的日志提供程序（如果有）
+            using var tempServiceProvider = webBuilder.Services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = false });
+            loggerFactory = tempServiceProvider.GetService<ILoggerFactory>() ??
+                               LoggerFactory.Create(builder => {});
 
             // 获取或创建日志工厂
             if (loggerFactory == null)
             {
                 loggerFactory = webBuilder.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
-            }
-
+            }  
             var application = await Application.CreateAsync(typeof(TRootModule), webBuilder.Services, loggerFactory, assemblies);
-            // 返回 IServiceCollection，以便继续链式调用  
             return webBuilder;
         }
 
         private static void CollectAssembliesRecursively(Assembly assembly, HashSet<Assembly> assemblies)
-        { 
+        {
             // 获取应用程序目录
             var binDirectory = Path.GetDirectoryName(assembly.Location);
 
@@ -110,7 +107,7 @@ namespace Mok.AspNetCore
             applicationLifetime.ApplicationStopped.Register(() =>
             {
                 try
-                {
+                { 
                     (application as IDisposable)?.Dispose();
                 }
                 catch (Exception ex)
@@ -119,6 +116,7 @@ namespace Mok.AspNetCore
                     logger?.LogError(ex, "Application dispose error");
                 }
             });
+            
             // 初始化应用程序
             await application.InitializeApplicationAsync(app);
         }
@@ -179,6 +177,27 @@ namespace Mok.AspNetCore
             public int GetHashCode(Assembly obj)
             {
                 return obj?.GetName().FullName.GetHashCode() ?? 0;
+            }
+        }
+
+        // 用于确保应用程序关闭时释放资源的服务
+        public class ApplicationShutdownService : IHostedService
+        {
+            private readonly Application _application;
+
+            public ApplicationShutdownService(Application application)
+            {
+                _application = application;
+            }
+
+            public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+            public async Task StopAsync(CancellationToken cancellationToken)
+            {
+                if (_application != null)
+                {
+                    await _application.ShutdownAsync();
+                }
             }
         }
     }

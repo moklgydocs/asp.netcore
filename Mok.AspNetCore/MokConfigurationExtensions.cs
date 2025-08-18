@@ -2,7 +2,7 @@
 
 namespace Mok.AspNetCore
 {
-    public static class ServiceCollectionConfigurationExtensions
+    public static class MokConfigurationExtensions
     {
         // 配置对象缓存键
         private const string ConfigurationCacheKey = "MokModuleConfiguration";

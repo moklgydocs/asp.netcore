@@ -5,6 +5,13 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<Title>mokframework</Title>
+		<Company>moklgy</Company>
+		<Product>mokframework</Product>
+		<Description>学习abp框架，进行自定义框架</Description>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>moklgy</Authors>
+		<IsPackable>true</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>

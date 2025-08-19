@@ -11,10 +11,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.19" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Mok.Modularity" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Mok.Modularity\Mok.Modularity.csproj" />
     <ProjectReference Include="..\MokPermissions.Domain.Shared\MokPermissions.Domain.Shared.csproj" />
   </ItemGroup>
 

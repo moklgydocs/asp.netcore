@@ -9,41 +9,28 @@ namespace MokPermissions.Web.HttpApi
     {
         public static async Task<int> Main(string[] args)
         {
-            //try
-            //{
-                Log.Logger = new LoggerConfiguration() // 注意，这里不能用var Log = new LoggerConfiguration
+            Log.Logger = new LoggerConfiguration() // 注意，这里不能用var Log = new LoggerConfiguration
 #if DEBUG
-                    .MinimumLevel.Debug()
+                .MinimumLevel.Debug()
 #else
                 .MinimumLevel.Information()
 #endif
-                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
-                    .Enrich.FromLogContext()
-                    .WriteTo.Async(c => c.File("Logs/logs.txt"))
-                    .WriteTo.Async(x => x.Console())
-                    .CreateLogger();
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Async(c => c.File("Logs/logs.txt"))
+                .WriteTo.Async(x => x.Console())
+                .CreateLogger();
 
-                Log.Information("Starting web host.");
+            Log.Information("Starting web host.");
 
-                var builder = WebApplication.CreateBuilder(args);
-                builder.Host.UseSerilog();
-                await builder.AddApplicationAsync<MokPermissionWebModule>();
-                var app = builder.Build();
-                await app.InitializeApplicationAsync();
-                await app.RunAsync(); 
-                return 0;
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Fatal(ex, "Host terminated unexpectedly");
-            //    return 1;
-            //}
-            //finally
-            //{
-            //    // 确保在程序退出时释放日志资源
-            //    Log.CloseAndFlush();
-            //}
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Host.UseSerilog();
+            await builder.AddApplicationAsync<MokPermissionWebModule>();
+            var app = builder.Build();
+            await app.InitializeApplicationAsync();
+            await app.RunAsync();
+            return 0;
         }
     }
 }

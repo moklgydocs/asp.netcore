@@ -4,6 +4,10 @@
     <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
       <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <Authors>moklgy</Authors>
+    <Company>moklgy</Company>
+    <Product>mokframework</Product>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

@@ -33,14 +33,16 @@ namespace Mok.AspNetCore
             // 这个工厂会使用已配置的日志提供程序（如果有）
             using var tempServiceProvider = webBuilder.Services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = false });
             loggerFactory = tempServiceProvider.GetService<ILoggerFactory>() ??
-                               LoggerFactory.Create(builder => {});
+                               LoggerFactory.Create(builder => { });
 
             // 获取或创建日志工厂
             if (loggerFactory == null)
             {
                 loggerFactory = webBuilder.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
-            }  
+            }
+
             var application = await Application.CreateAsync(typeof(TRootModule), webBuilder.Services, loggerFactory, assemblies);
+
             return webBuilder;
         }
 
@@ -107,7 +109,7 @@ namespace Mok.AspNetCore
             applicationLifetime.ApplicationStopped.Register(() =>
             {
                 try
-                { 
+                {
                     (application as IDisposable)?.Dispose();
                 }
                 catch (Exception ex)
@@ -116,7 +118,7 @@ namespace Mok.AspNetCore
                     logger?.LogError(ex, "Application dispose error");
                 }
             });
-            
+
             // 初始化应用程序
             await application.InitializeApplicationAsync(app);
         }

@@ -12,11 +12,12 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>moklgy</Authors>
 		<IsPackable>true</IsPackable>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Serilog" Version="4.3.0" />
-	  <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="Serilog" Version="4.3.0" />
+		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

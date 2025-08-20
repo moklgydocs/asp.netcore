@@ -1,6 +1,7 @@
-﻿using Mok.Modularity;
+﻿using Mok.AspNetCore;
+using Mok.Modularity;
 
-namespace Mok.AspNetCore
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
@@ -9,8 +10,8 @@ namespace Mok.AspNetCore
             return services
                 .GetSingletonInstance<IApplication>()
                 .ServiceProvider
-                .GetService<T>(); 
-        } 
+                .GetService<T>();
+        }
 
         public static object? GetServices(this IServiceCollection services, Type type)
         {
@@ -44,7 +45,7 @@ namespace Mok.AspNetCore
         }
 
         public static T? GetService<T>(this IServiceCollection services)
-        {
+        { 
             return services
                 .GetSingletonInstance<IApplication>()
                 .ServiceProvider

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using System.Reflection.PortableExecutable; 
+using System.Reflection.PortableExecutable;
 using Microsoft.Extensions.Hosting;
 
 namespace Mok.Modularity
@@ -90,7 +90,10 @@ namespace Mok.Modularity
             {
                 // 先注册应用程序实例到服务容器
                 services.AddSingleton<IApplication>(application);
-                //GetDefaultLoggerFactory(loggerFactory);
+
+                using var tempServiceProvider = services.BuildServiceProvider(validateScopes: false);
+                application.ServiceProvider = tempServiceProvider; // 提供临时ServiceProvider
+
                 // 创建模块加载器
                 application.ModuleLoader = new ModuleLoader(services, loggerFactory);
 
@@ -98,7 +101,7 @@ namespace Mok.Modularity
                 await application.ModuleLoader.LoadModulesAsync(assembliesToScan); 
 
                 // 构建服务提供程序
-                application.ServiceProvider = services.BuildServiceProvider(validateScopes: false);
+                application.ServiceProvider = services.BuildServiceProvider(validateScopes: false);  
 
                 application.Logger?.LogInformation("Application created successfully with root module: {RootModuleType}",
                    rootModuleType.FullName);

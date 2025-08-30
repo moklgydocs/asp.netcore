@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="circular_linked_list.c" />
     <ClCompile Include="LinkList.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>

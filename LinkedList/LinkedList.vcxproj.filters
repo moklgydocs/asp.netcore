@@ -21,6 +21,9 @@
     <ClCompile Include="LinkList.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="circular_linked_list.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LinkList.h">

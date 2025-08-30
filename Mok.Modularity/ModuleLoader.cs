@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
@@ -267,10 +268,10 @@ namespace Mok.Modularity
         /// </summary>
         private List<Type> SortModulesTopologically(List<Type> moduleTypes)
         {
-            if (moduleTypes.Count <= 1)
-            {
-                return moduleTypes;
-            }
+            //if (moduleTypes.Count <= 1)
+            //{
+            //    return moduleTypes;
+            //}
 
             var sortedList = new List<Type>(moduleTypes.Count);
             var inDegree = new Dictionary<Type, int>(moduleTypes.Count);
@@ -360,7 +361,7 @@ namespace Mok.Modularity
         public async Task InitializeModulesAsync(
             IServiceProvider serviceProvider,
             IApplicationBuilder appBuilder,
-            IHostingEnvironment env)
+            IHostEnvironment env)
         {
             ThrowIfDisposed();
 

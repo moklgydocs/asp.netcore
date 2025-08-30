@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Mok.AspNetCore;
 using Mok.Modularity;
 using MokPermissions.Application;
 using MokPermissions.Application.Contracts;
@@ -10,11 +11,11 @@ using MokPermissions.EntityframeworkCore;
 namespace MokPermissions.Web.HttpApi
 {
     [DependsOn(typeof(MokPermissionEntityFrameworkCoreModule),
-        typeof(MokPermissionApplicationModule),
-        typeof(MokPermissionsApplicationContractsModule)
+        typeof(MokPermissionsApplicationContractsModule),
+        typeof(MokPermissionApplicationModule)
         )]
     public class MokPermissionWebModule : MokModule
-    { 
+    {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             var services = context.Services;
@@ -22,7 +23,9 @@ namespace MokPermissions.Web.HttpApi
 
             services.AddControllers();
             services.AddRazorPages();
-
+            services.AddMokModuleSerilog();
+            var configuration = services.GetConfiguration();
+            var enviroment = services.GetService<IWebHostEnvironment>();
             // 添加认证
             //services.AddAuthentication("Cookie")
             //    .AddCookie("Cookie", options =>
@@ -37,9 +40,9 @@ namespace MokPermissions.Web.HttpApi
         // 如果需要在应用程序初始化时执行某些操作，可以重写 OnApplicationInitialization 方法
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
         {
-            var app = context.ApplicationBuilder; 
-          
-            var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>(); 
+            var app = context.ApplicationBuilder;
+            var env = context.Enviroment;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -57,7 +60,6 @@ namespace MokPermissions.Web.HttpApi
 
             // 多租户中间件（提取当前租户信息）
             app.UseMiddleware<MultiTenancyMiddleware>();// 这里的注入方式存在问题
-
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using System.Reflection.PortableExecutable;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using Microsoft.Extensions.Hosting;
 
 namespace Mok.Modularity
 {
@@ -36,7 +36,7 @@ namespace Mok.Modularity
         /// </summary>
         private ILoggerFactory LoggerFactory;
         private IApplicationBuilder AppBuilder;
-        private IHostingEnvironment Env;
+        private IHostEnvironment Env;
         private readonly ILogger<Application> Logger;
         private bool _isDisposed;
 
@@ -49,7 +49,7 @@ namespace Mok.Modularity
             IServiceCollection services,
             ILoggerFactory loggerFactory,
             IApplicationBuilder appBuilder,
-            IHostingEnvironment environment)
+            IHostEnvironment environment)
         {
             RootModuleType = rootModuleType ?? throw new ArgumentNullException(nameof(rootModuleType));
             services = services ?? throw new ArgumentNullException(nameof(services));
@@ -71,7 +71,7 @@ namespace Mok.Modularity
             ILoggerFactory loggerFactory = null,
             Assembly[] assembliesToScan = null,
             IApplicationBuilder appBuilder = null,
-            IHostingEnvironment env = null)
+            IHostEnvironment env = null)
         {
             // 验证参数
             if (rootModuleType == null) throw new ArgumentNullException(nameof(rootModuleType));
@@ -90,19 +90,18 @@ namespace Mok.Modularity
             {
                 // 先注册应用程序实例到服务容器
                 services.AddSingleton<IApplication>(application);
-                GetDefaultLoggerFactory(loggerFactory);
+
+                using var tempServiceProvider = services.BuildServiceProvider(validateScopes: false);
+                application.ServiceProvider = tempServiceProvider; // 提供临时ServiceProvider
+
                 // 创建模块加载器
                 application.ModuleLoader = new ModuleLoader(services, loggerFactory);
 
                 // 加载模块并配置服务
-                await application.ModuleLoader.LoadModulesAsync(assembliesToScan);
-
-                // 注册模块加载器和根模块类型
-                //services.AddSingleton(application.ModuleLoader);
-                //services.AddSingleton(rootModuleType);
+                await application.ModuleLoader.LoadModulesAsync(assembliesToScan); 
 
                 // 构建服务提供程序
-                application.ServiceProvider = services.BuildServiceProvider(validateScopes: false);
+                application.ServiceProvider = services.BuildServiceProvider(validateScopes: false);  
 
                 application.Logger?.LogInformation("Application created successfully with root module: {RootModuleType}",
                    rootModuleType.FullName);
@@ -167,7 +166,7 @@ namespace Mok.Modularity
                 var appBuilderToUse = app ?? AppBuilder;
 
                 // 如果环境为空，尝试从服务提供程序获取
-                var envToUse = Env ?? ServiceProvider.GetService<IHostingEnvironment>();
+                var envToUse = Env ?? ServiceProvider.GetService<IHostEnvironment>();
                 // 初始化模块，执行 OnPreApplicationInitialization, OnApplicationInitialization, OnPostApplicationInitialization 
                 await ModuleLoader.InitializeModulesAsync(ServiceProvider, appBuilderToUse, envToUse);
             }

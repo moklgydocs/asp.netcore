@@ -4,10 +4,13 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup> 
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mok.Modularity" Version="1.0.0" />
+  </ItemGroup> 
 	
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Mok.Modularity\Mok.Modularity.csproj" />
     <ProjectReference Include="..\MokPermissions.Application.Constracts\MokPermissions.Application.Contracts.csproj" />
   </ItemGroup>
 

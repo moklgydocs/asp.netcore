@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MokPermissions.Domain.Store;
 using MokPermissions.Domain.Entitys;
+using MokPermissions.Domain.Shared.MultiTenant;
 
 namespace MokPermissions.EntityframeworkCore
 {

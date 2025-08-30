@@ -14,8 +14,7 @@ namespace MokPermissions.Application
     [DependsOn(typeof(MokPermissionsDomainModule), 
         typeof(MokPermissionsApplicationContractsModule))]
     public class MokPermissionApplicationModule : MokModule
-    {
-
+    { 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             var services = context.Services;

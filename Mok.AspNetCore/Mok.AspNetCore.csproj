@@ -5,7 +5,20 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<Title>mokframework</Title>
+		<Company>moklgy</Company>
+		<Product>mokframework</Product>
+		<Description>学习abp框架，进行自定义框架</Description>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>moklgy</Authors>
+		<IsPackable>true</IsPackable>
+		<Version>1.0.2</Version>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Serilog" Version="4.3.0" />
+		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Mok.Modularity\Mok.Modularity.csproj" />

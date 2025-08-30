@@ -1,4 +1,5 @@
 ﻿using MokPermissions.Domain.Shared;
+using MokPermissions.Domain.Shared.MultiTenant;
 using System;
 using System.Collections.Generic;
 using System.Linq;

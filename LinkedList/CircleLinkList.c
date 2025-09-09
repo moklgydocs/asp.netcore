@@ -37,7 +37,7 @@ void PrintCircleLinkList(LinkList L) {
 	}
 }
 
-Status CircleLinkListInsert(LinkList L, int data) {
+Status CircleLinkListHeadInsert(LinkList L, int data) {
 	if (L == NULL)
 	{
 		printf("请初始化循环链表\n");
@@ -51,4 +51,27 @@ Status CircleLinkListInsert(LinkList L, int data) {
 	newNode->data.data = data;
 	newNode->next = L->next->next;
 	L->next->next = newNode;
+}
+
+Status CircleLinkListTailInsert(LinkList L, int data) {
+
+	if (L == NULL)
+	{
+		printf("请初始化循环链表\n");
+		return ERROR;
+	}
+	LNode* newNode = (LinkList)malloc(sizeof(LNode));
+	if (newNode == NULL)
+	{
+		printf("内存不足，请重试\n");
+	}
+	LinkList current = L;
+	while (current->next->next != L->next)
+	{
+		current = current->next;
+	}
+	newNode->next = current->next;
+	newNode->data.data = data;
+	current->next = newNode;
+	return SUCCESS;
 }

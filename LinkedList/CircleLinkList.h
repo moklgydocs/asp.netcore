@@ -14,13 +14,7 @@ void InitCircleLinkList(LinkList* L);
 /// <param name="L"></param>
 void PrintCircleLinkList(LinkList L);
 
-/// <summary>
-/// 循环链表插入
-/// </summary>
-/// <param name="L"></param>
-/// <param name="data"></param>
-/// <returns></returns>
-Status CircleLinkListInsert(LinkList L, int data);
+
 
 /// <summary>
 /// 循环链表删除，删除第一个值为data的节点
@@ -97,7 +91,7 @@ Status CircleLinkListLocate(LinkList L, int data);
 /// <param name="L"></param>
 /// <param name="data"></param>
 /// <returns></returns>
-Status CircleLinkListTailInsert(LinkList L, ElemType data);
+Status CircleLinkListTailInsert(LinkList L, int data);
 
 /// <summary>
 /// 头插法
@@ -105,7 +99,7 @@ Status CircleLinkListTailInsert(LinkList L, ElemType data);
 /// <param name="L"></param>
 /// <param name="data"></param>
 /// <returns></returns>
-Status CircleLinkListHeadInsert(LinkList L, ElemType data);
+Status CircleLinkListHeadInsert(LinkList L, int data);
 
 /// <summary>
 /// 根据下标删除节点，位置从0开始

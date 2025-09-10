@@ -21,10 +21,10 @@
     <ClCompile Include="LinkList.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="circular_linked_list.c">
+    <ClCompile Include="CircleLinkList.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CircleLinkList.c">
+    <ClCompile Include="DoubleLinkList.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -36,6 +36,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CircleLinkList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleLinkList.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

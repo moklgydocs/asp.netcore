@@ -124,13 +124,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CircleLinkList.c" />
-    <ClCompile Include="circular_linked_list.c" />
+    <ClCompile Include="DoubleLinkList.c" />
     <ClCompile Include="LinkList.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CircleLinkList.h" />
     <ClInclude Include="CommonHeadLib.h" />
+    <ClInclude Include="DoubleLinkList.h" />
     <ClInclude Include="LinkList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -123,6 +123,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CircleDoubleLinkList.c" />
+    <ClCompile Include="CircleDoubleLinkList.h" />
     <ClCompile Include="CircleLinkList.c" />
     <ClCompile Include="DoubleLinkList.c" />
     <ClCompile Include="LinkList.c" />

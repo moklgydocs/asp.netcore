@@ -99,6 +99,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CProj", "CProj\CProj.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Stack", "Stack\Stack.vcxproj", "{CCB44C06-2654-47AC-B1A8-7CA5ABABD591}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetcoreKernel", "NetcoreKernel", "{983F80D2-8229-4F80-A32A-1D744B0BCC42}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAspNetCore", "SimpleAspNetCore\SimpleAspNetCore.csproj", "{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -469,6 +476,18 @@ Global
 		{CCB44C06-2654-47AC-B1A8-7CA5ABABD591}.Release|x64.Build.0 = Release|x64
 		{CCB44C06-2654-47AC-B1A8-7CA5ABABD591}.Release|x86.ActiveCfg = Release|Win32
 		{CCB44C06-2654-47AC-B1A8-7CA5ABABD591}.Release|x86.Build.0 = Release|Win32
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Debug|x64.Build.0 = Debug|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Debug|x86.Build.0 = Debug|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Release|x64.ActiveCfg = Release|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Release|x64.Build.0 = Release|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Release|x86.ActiveCfg = Release|Any CPU
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -502,6 +521,7 @@ Global
 		{F94A38DC-902C-41F7-9B93-26464CB5D20B} = {5A1DEC41-8DB6-4724-B782-952F2D238FB6}
 		{B9519E8C-7299-4D6A-BE34-41875A3748C4} = {5A1DEC41-8DB6-4724-B782-952F2D238FB6}
 		{CCB44C06-2654-47AC-B1A8-7CA5ABABD591} = {4E172EDF-7B57-488F-8C09-0BCF115BFFC9}
+		{1F6ADD0D-8C07-48FE-9E0C-717CF56D7FEC} = {983F80D2-8229-4F80-A32A-1D744B0BCC42}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {785300F1-2D59-49F6-AA85-99636AF803CE}

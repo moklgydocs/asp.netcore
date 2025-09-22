@@ -11,17 +11,19 @@ namespace SimpleAspNetCore
         {
             Console.WriteLine("启动简化版ASP.NET Core与Kestrel示例");
 
-            // 创建应用构建器
+            // 1. 创建构建器，Options 被初始化
             var builder = SimpleWebApplicationBuilder.CreateBuilder();
 
-            // 配置Kestrel
+            // 2. 配置 Kestrel，直接修改 builder.Options
             builder.ConfigureKestrel(options =>
             {
+                // 这里的 options 就是 builder.Options 的引用
                 options.EndPoint = new IPEndPoint(IPAddress.Loopback, 5001);
+                // 对 options 的任何修改都会直接反映到 builder.Options 上
             });
 
-            // 构建应用
-            var app = builder.Build();
+            // 3. 构建应用时，使用已配置的 Options
+            var app = builder.Build(); // 内部会读取 builder.Options 的配
 
             // 配置中间件管道
             app.UseExceptionHandler()

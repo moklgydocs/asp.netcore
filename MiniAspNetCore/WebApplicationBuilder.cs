@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace CustomAspNetCore
 {
     /// <summary>
-    /// Web应用程序构建器 - 模拟ASP.NET Core的WebApplicationBuilder
-    /// 核心职责：配置服务、中间件和应用程序设置
+    /// Web应用程序构建�?- 模拟ASP.NET Core的WebApplicationBuilder
+    /// 核心职责：配置服务、中间件和应用程序设�?
     /// </summary>
     public class WebApplicationBuilder
     {
@@ -33,7 +33,7 @@ namespace CustomAspNetCore
     }
 
     /// <summary>
-    /// 服务集合接口 - 依赖注入容器的服务注册
+    /// 服务集合接口 - 依赖注入容器的服务注�?
     /// </summary>
     public interface IServiceCollection
     {
@@ -78,7 +78,7 @@ namespace CustomAspNetCore
         }
 
         /// <summary>
-        /// 注册瞬态服务
+        /// 注册瞬态服�?
         /// </summary>
         public void AddTransient<T>() where T : class
         {
@@ -86,7 +86,7 @@ namespace CustomAspNetCore
         }
 
         /// <summary>
-        /// 注册瞬态服务工厂方法
+        /// 注册瞬态服务工厂方�?
         /// </summary>
         public void AddTransient<T>(Func<IServiceProvider, T> factory)
         {
@@ -94,7 +94,7 @@ namespace CustomAspNetCore
         }
 
         /// <summary>
-        /// 注册作用域服务
+        /// 注册作用域服�?
         /// </summary>
         public void AddScoped<T>() where T : class
         {
@@ -102,7 +102,7 @@ namespace CustomAspNetCore
         }
 
         /// <summary>
-        /// 注册作用域服务工厂方法
+        /// 注册作用域服务工厂方�?
         /// </summary>
         public void AddScoped<T>(Func<IServiceProvider, T> factory)
         {
@@ -116,7 +116,7 @@ namespace CustomAspNetCore
     }
 
     /// <summary>
-    /// 服务描述符 - 描述服务的类型、实现和生命周期
+    /// 服务描述�?- 描述服务的类型、实现和生命周期
     /// </summary>
     public class ServiceDescriptor
     {
@@ -126,7 +126,7 @@ namespace CustomAspNetCore
         public ServiceLifetime Lifetime { get; }
 
         /// <summary>
-        /// 工厂方法（通过委托自定义实例创建逻辑）
+        /// 工厂方法（通过委托自定义实例创建逻辑�?
         /// </summary>
         public Func<IServiceProvider, object> Factory { get; }
 
@@ -166,8 +166,8 @@ namespace CustomAspNetCore
     /// </summary>
     public enum ServiceLifetime
     {
-        Singleton,  // 单例：整个应用程序生命周期内只创建一次
+        Singleton,  // 单例：整个应用程序生命周期内只创建一�?
         Transient,  // 瞬态：每次请求都创建新实例
-        Scoped      // 作用域：在同一个请求范围内是同一个实例
+        Scoped      // 作用域：在同一个请求范围内是同一个实�?
     }
 }

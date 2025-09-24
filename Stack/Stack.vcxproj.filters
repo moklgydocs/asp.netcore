@@ -21,12 +21,18 @@
     <ClCompile Include="ArrayStack.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LinkStack.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArrayStack.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CommonHeadLib.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkStack.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

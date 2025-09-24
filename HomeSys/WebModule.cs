@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Builder;
 namespace HomeSys
 {
     public class WebModule : MokModule
-    { 
+    {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddControllers(); 
+            context.Services.AddControllers();
             ConfigureSwaggerServices(context.Services);
 
 
@@ -21,11 +21,11 @@ namespace HomeSys
             app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
-            //app.UseWelcomePage(); 
+            //app.UseWelcomePage();
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHttpsRedirection();
 
-             
+
             app.UseRouting();
             app.UseSwagger();
             app.UseSwaggerUI(options =>
@@ -72,7 +72,7 @@ namespace HomeSys
                     });
                 // 确保包含所有控制器
                 options.DocInclusionPredicate((docName, description) => true);
-                //options.HideAbpEndpoints(); // 排除 ABP 内置接口（可选）  
+                //options.HideAbpEndpoints(); // 排除 ABP 内置接口（可选）
                 // 自动加载所有 xml 注释文件
                 var xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.TopDirectoryOnly);
                 foreach (var xmlFile in xmlFiles)

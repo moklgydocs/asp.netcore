@@ -10,11 +10,11 @@ namespace Mok.AspNetCore
 {
     public static class MokApplicationBuilderExtensions
     {
-        // 针对 .NET Standard 2.0 和 2.1  
+        // 针对 .NET Standard 2.0 和 2.1
         public static async Task<WebApplicationBuilder> AddApplicationAsync<TRootModule>(
             this WebApplicationBuilder webBuilder,
             ILoggerFactory loggerFactory = null)
-            where TRootModule : MokModule // 约束根模块类型  
+            where TRootModule : MokModule // 约束根模块类型
         {
             if (webBuilder == null)
             {

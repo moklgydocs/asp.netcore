@@ -24,7 +24,10 @@ namespace EfCore.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.MapGet("/", (HttpContext context) =>
+            {
+                context.Response.WriteAsync("helloworld");
+            });
             app.UseAuthorization();
 
             app.MapRazorPages();

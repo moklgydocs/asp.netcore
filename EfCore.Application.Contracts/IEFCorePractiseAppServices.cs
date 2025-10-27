@@ -1,7 +1,9 @@
-﻿namespace EfCore.Application.Contracts
+﻿using EfCore.Application.Contracts.Dtos;
+
+namespace EfCore.Application.Contracts
 {
     public interface IEFCorePractiseAppServices
     {
-
+        Task<List<CustomerDto>> PgSql_SelectDemo();
     }
 }

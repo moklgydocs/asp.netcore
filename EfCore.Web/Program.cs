@@ -1,4 +1,8 @@
+using EfCore.Application.Contracts;
+using EfCore.Applications;
 using EfCore.Pgsql;
+using Mok.SqlFactory;
+using Mok.SqlFactory.Factory;
 
 namespace EfCore.Web
 {
@@ -7,9 +11,11 @@ namespace EfCore.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<PgDbContext>();
+            builder.Services.AddDefaultDbContext<PgDbContext>();
             // Add services to the container.
+            builder.Services.AddScoped<IEFCorePractiseAppServices, EFCorePractiseAppServices>();
             builder.Services.AddRazorPages();
+            builder.Services.AddControllers();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -23,12 +29,12 @@ namespace EfCore.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
             app.MapGet("/", (HttpContext context) =>
             {
                 context.Response.WriteAsync("helloworld");
             });
             app.UseAuthorization();
+            app.MapControllers();
 
             app.MapRazorPages();
 

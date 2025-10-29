@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EfCore.Domain\EfCore.Domain.csproj" />
+    <ProjectReference Include="..\Mok.SqlFactory\Mok.SqlFactory.csproj" />
   </ItemGroup>
 
 </Project>

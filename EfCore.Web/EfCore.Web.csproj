@@ -8,7 +8,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EfCore.Application.Contracts\EfCore.Application.Contracts.csproj" />
+    <ProjectReference Include="..\EfCore.Applications\EfCore.Application.csproj" />
     <ProjectReference Include="..\EfCore.Pgsql\EfCore.Pgsql.csproj" />
+    <ProjectReference Include="..\Mok.SqlFactory\Mok.SqlFactory.csproj" />
   </ItemGroup>
 
 </Project>

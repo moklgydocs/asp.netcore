@@ -6,9 +6,11 @@ using System.Net;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using EfCore.Domain.Entitys;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Mok.SqlFactory;
 
 namespace EfCore.Pgsql
 {
+    [DefaultConnectionName("Default", Mok.SqlFactory.Enums.DatabaseType.PostgreSQL)]
     public partial class PgDbContext : DbContext
     {
         public PgDbContext()
@@ -64,8 +66,8 @@ namespace EfCore.Pgsql
 
         public virtual DbSet<Store> Stores { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-             => optionsBuilder.UseNpgsql("Host=localhost;Database=sakila;Username=postgres;Password=967552Linux@");
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //     => optionsBuilder.UseNpgsql("Host=localhost;Database=sakila;Username=postgres;Password=967552Linux@");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

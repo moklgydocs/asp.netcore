@@ -5,6 +5,12 @@
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
     </div>
+
+     <ElButton>Click me</ElButton>
+  <el-button type="primary">Primary Button</el-button>
+  <el-button type="success">Success Button</el-button>
+  <el-button type="info">Info Button</el-button>
+  <el-button type="warning">Warning Button</el-button>
   </header>
 
   <main>
@@ -17,6 +23,7 @@
 import HelloWorld from '@/components/HelloWorld.vue'
 import TheWelcome from '@/components/TheWelcome.vue'
 import { useCounterStore } from '@/stores/counter'
+import { ElButton } from 'element-plus';
 
 
 const counter = useCounterStore()

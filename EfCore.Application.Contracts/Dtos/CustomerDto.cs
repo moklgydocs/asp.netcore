@@ -5,6 +5,7 @@ namespace EfCore.Application.Contracts.Dtos;
 
 public partial class CustomerDto
 {
+    public int Index { get; set; }
     public int CustomerId { get; set; }
 
     public int StoreId { get; set; }

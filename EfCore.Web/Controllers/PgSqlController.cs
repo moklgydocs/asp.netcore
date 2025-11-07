@@ -19,10 +19,17 @@ namespace EfCore.Web.Controllers
         {
             return Ok();
         }
-        [HttpGet("demo")]
+        [HttpGet("select")]
         public async Task<IActionResult> SelectDemoData()
         {
             var data = await _practiseAppServices.PgSql_SelectDemo();
+            return Ok(data);
+        }
+
+        [HttpGet("partition")]
+        public async Task<IActionResult> Partition()
+        {
+            var data = await _practiseAppServices.Partition();
             return Ok(data);
         }
         [HttpGet("valid")]

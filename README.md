@@ -3,6 +3,29 @@
 > 说明 <br/>
 > 主要是学习asp.net core 与Kestrel的底层通信
 
+## Rust Mini Kernel (新增)
+
+> 说明 <br/>
+> 使用Rust实现的简易版类Linux内核项目，用于学习操作系统底层原理
+
+### 主要特性
+- ✅ 裸机编程（bare-metal）
+- ✅ VGA文本输出（80x25，16色）
+- ✅ 串口通信支持
+- ✅ 中英文双语界面
+- ✅ 完整的中英文文档
+
+### 快速开始
+```bash
+cd rust_mini_kernel
+make install-deps  # 首次运行，安装依赖
+make build         # 构建内核
+make run          # 在QEMU中运行
+```
+
+详见 [rust_mini_kernel/README.md](rust_mini_kernel/README.md)
+
+---
 
 # ASP.NET Core与Kestrel集成的核心理解
 ## 基本接口关系

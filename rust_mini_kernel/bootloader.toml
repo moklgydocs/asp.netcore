@@ -1,0 +1,2 @@
+[package.metadata.bootloader]
+kernel-stack-size = 512

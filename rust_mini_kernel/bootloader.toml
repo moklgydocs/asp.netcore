@@ -1,5 +1,2 @@
-[dependencies.bootloader]
-features = ["map_physical_memory"]
-
 [package.metadata.bootloader]
 kernel-stack-size = 512

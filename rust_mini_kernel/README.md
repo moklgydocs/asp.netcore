@@ -251,10 +251,43 @@ writer.write_string("绿色文本!");
 
 ### QEMU运行失败
 
-确保已正确安装QEMU并且版本兼容。如果仍有问题，尝试指定完整路径:
+**Windows 用户解决方案**
+
+如果在 Windows 上运行 QEMU 出现问题，请使用以下解决方案：
+
+1. **运行诊断脚本**：
 ```bash
-/usr/bin/qemu-system-x86_64 -drive format=raw,file=target/x86_64-unknown-none/debug/bootimage-rust_mini_kernel.bin
+qemu_diagnose.bat
 ```
+
+2. **使用多配置启动脚本**：
+```bash
+run_qemu.bat
+```
+
+3. **安装 QEMU（推荐方式）**：
+```bash
+choco install qemu
+```
+
+4. **使用 PowerShell 脚本**：
+```bash
+powershell -ExecutionPolicy Bypass -File qemu_runner.ps1
+```
+
+5. **WSL 替代方案**：
+```bash
+bash run_kernel.sh
+```
+
+**常见解决方案**
+
+- 确保以管理员身份运行脚本
+- 检查系统虚拟化是否启用（任务管理器 > 性能 > CPU）
+- 尝试不同的 QEMU 配置参数
+- 检查 Windows 防火墙和杀毒软件设置
+
+详细故障排除指南请参考：`QEMU_TROUBLESHOOTING.md`
 
 ## 许可证
 

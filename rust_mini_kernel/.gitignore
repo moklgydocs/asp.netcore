@@ -1,0 +1,27 @@
+# Rust编译产物
+/target/
+**/*.rs.bk
+*.pdb
+
+# Cargo锁文件
+Cargo.lock
+
+# 这些是备份文件，由各种编辑器生成
+*~
+*.swp
+*.swo
+*#
+
+# IDE配置
+.idea/
+.vscode/
+*.iml
+
+# 操作系统生成的文件
+.DS_Store
+Thumbs.db
+
+# 可启动镜像
+*.bin
+*.img
+*.iso

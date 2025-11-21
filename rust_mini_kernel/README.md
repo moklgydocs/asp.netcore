@@ -251,6 +251,10 @@ writer.write_string("绿色文本!");
 
 ### QEMU运行失败
 
+**PageAlreadyMapped 错误**
+
+如果在运行时遇到 `PageAlreadyMapped` 错误，这已经被修复了。该问题是由不必要的 `map_physical_memory` 特性引起的，已从配置中移除。详细信息请参阅 [FIX_PAGE_MAPPING_ERROR.md](./FIX_PAGE_MAPPING_ERROR.md)。
+
 **Windows 用户解决方案**
 
 如果在 Windows 上运行 QEMU 出现问题，请使用以下解决方案：

@@ -3,8 +3,8 @@
 
 use core::panic::PanicInfo;
 
-mod vga_buffer;
 mod serial;
+mod vga_buffer;
 
 /// 内核入口点
 #[no_mangle]
@@ -25,7 +25,7 @@ pub extern "C" fn _start() -> ! {
     println!("  [√] Panic处理");
     println!();
     println!("内核正在运行...");
-    
+
     // 内核主循环
     loop {
         x86_64::instructions::hlt();

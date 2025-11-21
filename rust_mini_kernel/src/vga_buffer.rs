@@ -1,7 +1,7 @@
-use volatile::Volatile;
 use core::fmt;
 use lazy_static::lazy_static;
 use spin::Mutex;
+use volatile::Volatile;
 
 /// VGA缓冲区大小
 const BUFFER_HEIGHT: usize = 25;
